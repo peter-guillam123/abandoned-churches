@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+
+# Claude Code local settings (contains user-specific permission allowlist)
+.claude/settings.local.json
+
+# Intermediate / raw ingestion outputs — rebuilt from sources via GitHub Action
+build/_raw/
+build/_cache/
+build/*.log

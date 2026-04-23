@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Friendless — a register of the UK's closed and at-risk churches</title>
+  <meta name="description" content="A companion to The Guardian's series on the UK's derelict churches. Find the closed or at-risk church nearest you, read its story, and share what you know." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23F4EFE6' width='32' height='32'/%3E%3Cpath d='M16 4 L16 28 M10 10 L22 10 M13 14 L13 28 M19 14 L19 28' stroke='%23052962' stroke-width='2' fill='none'/%3E%3C/svg%3E" type="image/svg+xml" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+</head>
+<body>
+
+  <header class="masthead">
+    <h1 class="title">
+      <a href="./" aria-label="Friendless — reset the view">Friend<span class="and">less</span></a>
+    </h1>
+    <p class="dek">
+      A register of the UK's closed and at-risk churches, chapels and meeting houses — the buildings half of the country's most important historic fabric sits within, and that hold up much of its social infrastructure besides. A companion to <a href="./stories.html">The Guardian's reporting series</a>.
+    </p>
+    <div class="stat">
+      <span class="big" id="stat-big">—</span>
+      buildings in the register<span class="stat-sub" id="stat-sub">seed prototype · six records</span>
+    </div>
+  </header>
+
+  <div class="rule-band"><span class="ornament" aria-hidden="true">&#x2720;</span></div>
+
+  <nav class="subnav" aria-label="Primary">
+    <a href="./" class="active" aria-current="page">Find one near you</a>
+    <a href="./stories.html">The series</a>
+    <a href="./about.html">About</a>
+  </nav>
+
+  <main class="shell">
+    <!-- LEFT: finder sidebar -->
+    <aside class="finder">
+      <p class="kicker">Start here</p>
+      <p class="intro">Type a postcode or a place — <em>Anglesey</em>, <em>Stoke Newington</em>, <em>Hull</em> — and we'll surface the closed, at-risk or rescued churches nearest you.</p>
+
+      <form id="find-form" autocomplete="off">
+        <input type="text" id="q" placeholder="e.g. LL71 8AG, or Hackney…" aria-label="Postcode or place" />
+        <div class="actions">
+          <button type="submit">Find</button>
+          <button type="button" id="clear-btn" class="ghost">Clear</button>
+        </div>
+        <button type="button" class="geoloc" id="geoloc-btn">
+          <span class="icon" aria-hidden="true"></span>
+          <span>or use my location</span>
+        </button>
+      </form>
+
+      <div class="status-legend">
+        <p class="label">Status</p>
+        <ul id="status-legend">
+          <li data-status="at-risk"><span class="dot" style="background: var(--status-at-risk)"></span> At risk <span class="count" data-count="at-risk">0</span></li>
+          <li data-status="rescued"><span class="dot" style="background: var(--status-rescued)"></span> Rescued <span class="count" data-count="rescued">0</span></li>
+          <li data-status="preserved"><span class="dot" style="background: var(--status-preserved)"></span> Preserved <span class="count" data-count="preserved">0</span></li>
+          <li data-status="repurposed"><span class="dot" style="background: var(--status-repurposed)"></span> Repurposed <span class="count" data-count="repurposed">0</span></li>
+          <li data-status="closed"><span class="dot" style="background: var(--status-closed)"></span> Closed, unresolved <span class="count" data-count="closed">0</span></li>
+          <li data-status="demolished"><span class="dot" style="background: var(--status-demolished)"></span> Lost <span class="count" data-count="demolished">0</span></li>
+        </ul>
+      </div>
+
+      <p class="tips">Click any dot on the map — or any church on the right — to read its story.</p>
+    </aside>
+
+    <!-- MIDDLE: map -->
+    <section class="stage">
+      <div class="head">
+        <div>
+          <p class="kicker">The register</p>
+          <h2 class="head-title" id="head-title">Six buildings to start — six stories</h2>
+        </div>
+        <div class="head-meta" id="head-meta">Seed data · April 2026</div>
+      </div>
+      <div class="map-stage">
+        <div id="map" role="region" aria-label="Map of closed and at-risk churches across the UK"></div>
+        <!-- Decorative overlays — after the map in DOM so they render above
+             Leaflet's own stacking context. pointer-events: none keeps the
+             map draggable beneath them. -->
+        <span class="corner-tr" aria-hidden="true"></span>
+        <span class="corner-bl" aria-hidden="true"></span>
+        <div class="cartouche" aria-hidden="true">
+          <span class="eyebrow">Plate I</span>
+          <span class="name">Friendless</span>
+          <span class="subname">A register of the UK's closed & at-risk churches</span>
+        </div>
+        <svg class="compass" viewBox="-8 -8 116 116" role="img" aria-label="Compass rose">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+          <polygon points="50,6 54,50 46,50" fill="currentColor"/>
+          <polygon points="50,94 54,50 46,50" fill="currentColor" opacity="0.7"/>
+          <polygon points="6,50 50,46 50,54" fill="currentColor" opacity="0.55"/>
+          <polygon points="94,50 50,46 50,54" fill="currentColor" opacity="0.55"/>
+          <polygon points="21,21 47,47 47,53 53,53 53,47" fill="currentColor" opacity="0.35"/>
+          <polygon points="79,21 53,47 47,47 47,53 53,53" fill="currentColor" opacity="0.35"/>
+          <polygon points="79,79 53,53 47,53 47,47 53,47" fill="currentColor" opacity="0.35"/>
+          <polygon points="21,79 47,53 53,53 53,47 47,47" fill="currentColor" opacity="0.35"/>
+          <circle cx="50" cy="50" r="3" fill="currentColor"/>
+          <text x="50" y="-2" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="currentColor" dominant-baseline="hanging" font-style="italic">N</text>
+        </svg>
+      </div>
+      <p class="hint">
+        <strong>The status colours indicate what is happening to each building, not how old or how grand it is.</strong>
+        A rescued building in Anglesey sits alongside a repurposed chapel in Spitalfields alongside a medieval church in Essex that would not exist today without intervention. <em>Editorial seed — not a complete register.</em>
+      </p>
+    </section>
+
+    <!-- RIGHT: reading panel -->
+    <aside class="reading-panel">
+      <p class="eyebrow" id="reading-eyebrow">The six seeded buildings</p>
+      <div class="panel-rule"></div>
+      <div id="reading-body">
+        <p class="idle-state" id="idle-state">Find the church <em>at the end of your lane</em>, or scroll the register below. Every building has a custodian, a condition, and a story. Many have a community still trying to save them.</p>
+        <ul class="result-list" id="result-list"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Building detail — populated on click -->
+  <section class="detail" id="detail" hidden></section>
+
+  <!-- Submission modal -->
+  <div class="submit-modal" id="submit-modal" role="dialog" aria-labelledby="submit-title" aria-modal="true">
+    <div class="box">
+      <button type="button" class="close" id="submit-close" aria-label="Close">×</button>
+      <p class="kicker">Add to the record</p>
+      <h3 id="submit-title">Share a memory or a photograph</h3>
+      <p class="intro" id="submit-intro">Tell us about this church.</p>
+      <form id="submit-form">
+        <label for="submit-memory">Your memory or note</label>
+        <textarea id="submit-memory" rows="5" placeholder="I was baptised here in 1978…"></textarea>
+
+        <label for="submit-name">Your name (optional)</label>
+        <input type="text" id="submit-name" placeholder="Jane Bown" />
+
+        <label for="submit-email">Email (so we can follow up)</label>
+        <input type="email" id="submit-email" placeholder="you@example.com" />
+
+        <p class="small">Nothing is published until a human has read it. By submitting you agree we can contact you about your note and, with your permission, quote it in future reporting.</p>
+
+        <button type="submit" class="submit-btn">Send</button>
+        <p class="sent" id="submit-sent" hidden>Thank you — we'll be in touch.</p>
+      </form>
+    </div>
+  </div>
+
+  <footer class="foot">
+    Prototype — seed data drawn from <a href="https://friendsoffriendlesschurches.org.uk/">Friends of Friendless Churches</a>, the <a href="https://www.visitchurches.org.uk/">Churches Conservation Trust</a>, the <a href="https://historicengland.org.uk/advice/heritage-at-risk/">Historic England Heritage at Risk register</a> and <a href="https://www.nationalchurchestrust.org/">National Churches Trust</a> reporting. Basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. A companion to The Guardian's reporting, not an official Guardian product.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous" defer></script>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

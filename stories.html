@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The series — Friendless</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23F4EFE6' width='32' height='32'/%3E%3Cpath d='M16 4 L16 28 M10 10 L22 10 M13 14 L13 28 M19 14 L19 28' stroke='%23052962' stroke-width='2' fill='none'/%3E%3C/svg%3E" type="image/svg+xml" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <style>
+    .long {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 48px 80px;
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .long .kicker {
+      font-family: var(--ui);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin: 0 0 12px;
+    }
+    .long h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin: 0 0 20px;
+    }
+    .long p { margin: 0 0 18px; }
+    .long em { color: var(--ink); font-style: italic; }
+    .long .series { list-style: none; padding: 0; margin: 30px 0 0; }
+    .long .series li {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--paper-rule);
+    }
+    .long .series .num {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 6px;
+    }
+    .long .series .headline {
+      display: block;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.2;
+      color: var(--ink);
+      text-decoration: none;
+      margin-bottom: 6px;
+    }
+    .long .series .standfirst {
+      font-family: var(--body);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      margin: 0 0 8px;
+    }
+    .long .series .byline {
+      font-family: var(--ui);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .long .series .future {
+      color: var(--ink-faint);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="masthead">
+    <h1 class="title">
+      <a href="./" aria-label="Friendless — home">Friend<span class="and">less</span></a>
+    </h1>
+    <p class="dek">
+      The Guardian's reporting series on the UK's derelict churches and chapels — and what their slow losses say about the communities that built them.
+    </p>
+    <div class="stat">
+      <span class="big">1</span>
+      piece so far<span class="stat-sub">in an evolving series</span>
+    </div>
+  </header>
+
+  <div class="rule-band"><span class="ornament" aria-hidden="true">&#x2720;</span></div>
+
+  <nav class="subnav" aria-label="Primary">
+    <a href="./">Find one near you</a>
+    <a href="./stories.html" class="active" aria-current="page">The series</a>
+    <a href="./about.html">About</a>
+  </nav>
+
+  <section class="long">
+    <p class="kicker">The series</p>
+    <h2>Half of Britain's most important historic buildings are churches. Many are falling down.</h2>
+    <p>This tool is a reader's companion to an evolving piece of Guardian reporting. The series is about churches, chapels and meeting houses that have closed or are on the edge of closing — and what they reveal about the communities around them. Not every one of these buildings is "at risk" in a heritage sense. Many are at risk in a more ordinary sense: the roof leaks, the congregation has fallen to three people, and no-one has the £250,000 the repairs will cost.</p>
+    <p>The series will grow. Each building the reporting visits is added to the register on the <a href="./">map</a>, alongside buildings the Churches Conservation Trust and Friends of Friendless Churches have already saved, and buildings named on Historic England's Heritage at Risk list. If you know a church that belongs on the register, or if you have a memory of one that is already here, <a href="./about.html#contribute">tell us</a>.</p>
+
+    <ol class="series">
+      <li>
+        <p class="num">Dispatch 02 · 23 April 2026</p>
+        <a href="#" class="headline" onclick="event.preventDefault()">The Welsh church claimed by spiders and ivy: what do Britain's derelict churches say about our health and happiness?</a>
+        <p class="standfirst">Half of the most important buildings in the UK are churches and, even when congregations fall away, they are vital community hubs. But many, including beloved St Tyfrydog's in Wales, which closed in 2020, are decaying. Can they be saved?</p>
+        <p class="byline">Sam Wollaston · Photography Christopher Thomond</p>
+      </li>
+      <li>
+        <p class="num">Dispatch 01 · TBC</p>
+        <span class="headline future">The first piece in the series — TK.</span>
+        <p class="standfirst future">This register is seeded from the second piece; the first will be added here when its details are in the archive.</p>
+      </li>
+      <li>
+        <p class="num">Dispatch 03 · forthcoming</p>
+        <span class="headline future">To come.</span>
+        <p class="standfirst future">Subsequent pieces in the series will each seed one or more buildings into the register.</p>
+      </li>
+    </ol>
+  </section>
+
+  <footer class="foot">
+    A companion to The Guardian's reporting, not an official Guardian product. Basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.
+  </footer>
+
+</body>
+</html>

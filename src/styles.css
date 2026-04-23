@@ -1,0 +1,1452 @@
+/* Friendless — companion to The Guardian's series on the UK's derelict churches.
+   Design follows the "Newsroom Dataroom" palette of Guardian Angles:
+   warm newsprint paper, Guardian Egyptian display / Text Egyptian body /
+   Text Sans UI, with a hairline blue/yellow rule band beneath the masthead. */
+
+@font-face {
+  font-family: 'GH Guardian Headline';
+  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GH Guardian Headline';
+  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GuardianTextEgyptian';
+  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-Reg.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GuardianTextEgyptian';
+  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-RegItalic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GuardianTextSans';
+  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GuardianTextSans';
+  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Paper — warm parchment, three tones. */
+  --paper: #F2ECDD;
+  --paper-deep: #E4D9BF;
+  --paper-rule: #C9BB9D;
+
+  /* Ink — four tones on the page. */
+  --ink: #141311;
+  --ink-soft: #3b362d;
+  --ink-mute: #5e584c;
+  --ink-faint: #8c8575;
+
+  /* Two topic accents only — ivy (living decay) and rust (oxidised
+     iron). Everything else the palette used to carry (ochre, eco
+     green, purple, yellow) has been retired so the page reads as
+     one system rather than a sampler. */
+  --ivy: #3f5a3a;
+  --ivy-soft: #6f8a62;
+  --ivy-deep: #2c4229;
+  --rust: #8b3a1a;
+  --rust-soft: #b05a36;
+
+  /* Guardian blue is kept ONLY for link underlines + primary CTA —
+     it stops being an identity colour. */
+  --guardian-blue: #052962;
+
+  /* Status palette — one family. Each status is a tint of ivy or
+     rust, with stone for the in-between / closed states. */
+  --status-at-risk: var(--rust);
+  --status-rescued: var(--ivy);
+  --status-preserved: var(--ivy-soft);
+  --status-repurposed: var(--rust-soft);
+  --status-closed: #8c8575;
+  --status-demolished: #5e584c;
+
+  --display: 'GH Guardian Headline', Georgia, 'Times New Roman', serif;
+  --body: 'GuardianTextEgyptian', Georgia, 'Times New Roman', serif;
+  --ui: 'GuardianTextSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --mono: 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  overflow-x: clip;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+html { background: var(--paper); }
+body {
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  /* One texture only — fine dot lattice, same grit as Angles. Text
+     carries; texture is felt, not seen. */
+  background-image: radial-gradient(rgba(20, 19, 17, 0.025) 1px, transparent 1px);
+  background-size: 3px 3px;
+  background-position: 0 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.masthead .title a:focus-visible { outline-color: var(--ivy); }
+
+/* ----- Masthead ----- */
+.masthead {
+  padding: 32px 48px 24px;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: 40px;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+.masthead .title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--ivy);
+  margin: 0;
+}
+.masthead .title a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 150ms;
+}
+.masthead .title a:hover { opacity: 0.75; }
+.masthead .title a:focus-visible {
+  outline: 2px solid var(--ivy);
+  outline-offset: 4px;
+}
+.masthead .title .and {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--ink);
+}
+.masthead .dek {
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  line-height: 1.45;
+  margin: 0;
+}
+.masthead .dek em {
+  font-style: italic;
+  color: var(--ink);
+}
+.masthead .dek a {
+  color: var(--guardian-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--guardian-blue);
+}
+.masthead .dek a:hover { border-bottom-style: solid; }
+.masthead .stat {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: right;
+  line-height: 1.3;
+}
+.masthead .stat .big {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-transform: none;
+}
+.masthead .stat .stat-sub {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--body);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-mute);
+}
+
+/* Rule band — two hairlines in ivy + Guardian blue, with a fleuron
+   centred on the seam. Reads as a printed supplement's section rule,
+   not a news-channel bar. */
+.rule-band {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  align-items: center;
+}
+.rule-band::before,
+.rule-band::after {
+  content: '';
+  display: block;
+  height: 3px;
+}
+.rule-band::before { background: var(--ivy); }
+.rule-band::after  { background: var(--guardian-blue); }
+.rule-band .ornament {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  background: var(--paper);
+  color: var(--ivy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 16px/1 var(--display);
+  border-radius: 50%;
+}
+@media (max-width: 960px) {
+  .rule-band .ornament { display: none; }
+}
+
+/* ----- Subnav ----- */
+.subnav {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 14px 48px 0;
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--ui);
+  overflow-x: auto;
+}
+.subnav a {
+  display: inline-block;
+  padding: 10px 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  transition: color 120ms, border-color 120ms;
+  white-space: nowrap;
+}
+.subnav a:hover { color: var(--ink); }
+.subnav a.active {
+  color: var(--ink);
+  border-bottom-color: var(--guardian-blue);
+}
+
+/* ----- Layout ----- */
+main.shell {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 28px 48px 48px;
+  display: grid;
+  grid-template-columns: 300px 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ----- Left: finder sidebar ----- */
+.finder {
+  position: sticky;
+  top: 20px;
+  font-family: var(--ui);
+}
+.finder .label {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 10px;
+}
+.finder .kicker {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 0 0 8px;
+}
+.finder .intro {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+.finder form { display: flex; flex-direction: column; gap: 8px; }
+.finder input[type=text] {
+  font: 400 16px/1.3 var(--body);
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid var(--paper-rule);
+  background: transparent;
+  color: var(--ink);
+  transition: border-color 150ms;
+  width: 100%;
+  min-width: 0;
+}
+.finder input[type=text]:focus {
+  outline: none;
+  border-bottom-color: var(--guardian-blue);
+}
+.finder input[type=text]::placeholder {
+  color: var(--ink-mute);
+  font-style: italic;
+}
+.finder .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.finder button {
+  font: 700 12px/1 var(--ui);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  border: none;
+  cursor: pointer;
+  transition: transform 120ms, background 120ms;
+}
+.finder button[type=submit] {
+  background: var(--guardian-blue);
+  color: var(--paper);
+  flex: 1;
+}
+.finder button[type=submit]:hover { background: var(--ink); }
+.finder button.ghost {
+  background: transparent;
+  color: var(--ink-mute);
+  border: 1px solid var(--paper-rule);
+}
+.finder button.ghost:hover { color: var(--ink); border-color: var(--ink); }
+
+.finder .geoloc {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+  gap: 6px;
+  font: 400 13px/1 var(--body);
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.finder .geoloc:hover { color: var(--guardian-blue); }
+.finder .geoloc .icon {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  position: relative;
+}
+.finder .geoloc .icon::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.finder .status-legend {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-rule);
+}
+.finder .status-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.finder .status-legend li {
+  font: 400 13px/1.4 var(--body);
+  color: var(--ink-soft);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  cursor: pointer;
+  padding: 2px 0;
+  user-select: none;
+}
+.finder .status-legend li:hover { color: var(--ink); }
+.finder .status-legend li.muted { opacity: 0.3; }
+.finder .status-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transform: translateY(1px);
+}
+.finder .status-legend .count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.finder .tips {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px dotted var(--paper-rule);
+  font: italic 400 13px/1.5 var(--body);
+  color: var(--ink-mute);
+}
+
+/* ----- Middle: map stage ----- */
+.stage {
+  position: relative;
+}
+.stage .head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 20px;
+}
+.stage .kicker {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 4px;
+}
+.stage .head-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.stage .head-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* Map as designed artefact — framed like a plate in a heritage atlas.
+   The stage wrapper holds the frame and any overlays (cartouche,
+   compass, corner markers); #map itself is the Leaflet canvas. */
+/* Map stage — a single ivy hairline with four corner brackets. The
+   frame is the whole device, so keep it quiet. */
+.map-stage {
+  position: relative;
+  padding: 8px;
+  background: var(--paper);
+  border: 1px solid var(--ivy);
+}
+/* Corner marks removed — the hairline border carries the frame. */
+.map-stage .corner-tr,
+.map-stage .corner-bl { display: none; }
+
+/* Cartouche — top-left title plate with a quiet editorial label.
+   Sits on top of the map tiles without blocking interaction in its
+   middle third. */
+/* Cartouche — a single editorial plate in the top-right, with a
+   one-pixel paper-rule border. The ivy accent lives in the name,
+   not the frame. */
+.map-stage .cartouche {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 450;
+  padding: 10px 14px 12px;
+  background: rgba(242, 236, 221, 0.95);
+  border: 1px solid var(--paper-rule);
+  pointer-events: none;
+  max-width: 260px;
+  text-align: right;
+}
+.map-stage .cartouche .eyebrow {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rust);
+  display: block;
+  margin-bottom: 2px;
+}
+.map-stage .cartouche .name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.15;
+  color: var(--ivy);
+  display: block;
+}
+.map-stage .cartouche .subname {
+  display: block;
+  font-family: var(--body);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+
+/* Compass rose — inked engraving in a corner. SVG inline for
+   performance and theming via currentColor. */
+.map-stage .compass {
+  position: absolute;
+  bottom: 44px;
+  left: 28px;
+  z-index: 400;
+  width: 76px;
+  height: 76px;
+  color: var(--ivy);
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(242, 236, 221, 0.92) 50%, rgba(242, 236, 221, 0) 75%);
+  border-radius: 50%;
+  padding: 4px;
+}
+
+@media (max-width: 720px) {
+  .map-stage .cartouche { max-width: 180px; padding: 7px 10px; }
+  .map-stage .cartouche .name { font-size: 14px; }
+  .map-stage .compass { width: 52px; height: 52px; bottom: 18px; right: 18px; }
+}
+
+#map {
+  width: 100%;
+  height: 560px;
+  background: #d7ceb6;
+  position: relative;
+}
+/* Push the OSM raster tiles further into the atlas / engraving
+   register — heavy sepia and grayscale, a touch of contrast and a
+   tiny blur make the labels feel letterpress. The frame does the
+   rest of the work. */
+.leaflet-tile {
+  filter:
+    grayscale(0.72)
+    sepia(0.38)
+    contrast(0.88)
+    brightness(1.04)
+    saturate(0.7);
+}
+/* Gentle multiply on the tile pane only — lets the parchment paper
+   warm the map from behind. Keep markers and controls in normal blend
+   so the status colours stay true. */
+.leaflet-tile-pane { mix-blend-mode: multiply; }
+.leaflet-container {
+  font-family: var(--ui) !important;
+  background: var(--paper-deep) !important;
+}
+.leaflet-control-attribution {
+  font-family: var(--ui) !important;
+  font-size: 10px !important;
+  background: rgba(244, 239, 230, 0.85) !important;
+  color: var(--ink-mute) !important;
+}
+.leaflet-control-attribution a { color: var(--guardian-blue) !important; }
+.leaflet-control-zoom a {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--paper-rule) !important;
+  font-family: var(--display) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+/* Custom marker */
+.chmark {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--status-at-risk);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1.5px var(--ink), 0 2px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+.chmark.status-rescued { background: var(--status-rescued); }
+.chmark.status-preserved { background: var(--status-preserved); }
+.chmark.status-repurposed { background: var(--status-repurposed); }
+.chmark.status-closed { background: var(--status-closed); }
+.chmark.status-demolished { background: var(--status-demolished); }
+.chmark.is-active {
+  transform: scale(1.35);
+  box-shadow: 0 0 0 2px var(--ivy), 0 0 0 4px var(--paper), 0 4px 10px rgba(20,19,17,0.35);
+}
+.chmark-me {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--guardian-blue);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1.5px var(--guardian-blue), 0 0 14px rgba(5, 41, 98, 0.45);
+  animation: mePulse 2.4s ease-in-out infinite;
+}
+@keyframes mePulse {
+  0%, 100% { box-shadow: 0 0 0 1.5px var(--guardian-blue), 0 0 8px rgba(5, 41, 98, 0.45); }
+  50% { box-shadow: 0 0 0 1.5px var(--guardian-blue), 0 0 18px rgba(5, 41, 98, 0.7); }
+}
+
+.stage .hint {
+  font: 12px/1.5 var(--body);
+  color: var(--ink-soft);
+  margin-top: 14px;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 12px;
+  max-width: 62ch;
+}
+.stage .hint strong {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* ----- Right: reading panel ----- */
+.reading-panel {
+  position: sticky;
+  top: 20px;
+  font-family: var(--ui);
+  min-height: 300px;
+}
+.reading-panel .eyebrow {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 8px;
+}
+.reading-panel .panel-rule {
+  height: 3px;
+  background: var(--ink);
+  margin: 0 0 14px;
+}
+
+.reading-panel .idle-state {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.reading-panel .idle-state em { color: var(--ink); font-style: italic; }
+
+.reading-panel .result-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.reading-panel .result {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--paper-rule);
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  gap: 10px;
+  align-items: baseline;
+}
+.reading-panel .result:last-child { border-bottom: none; }
+.reading-panel .result:hover .result-name { color: var(--guardian-blue); }
+.reading-panel .result .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  align-self: center;
+}
+.reading-panel .result .result-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.2;
+  color: var(--ink);
+  transition: color 120ms;
+}
+.reading-panel .result .result-place {
+  display: block;
+  font-family: var(--body);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+.reading-panel .result .result-status {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.reading-panel .result .result-dist {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  align-self: center;
+}
+
+/* ----- Building detail — the full story for one church ----- */
+.detail {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 0 56px;
+  border-top: 1px solid var(--paper-rule);
+}
+.detail[hidden] { display: none; }
+.detail .body {
+  max-width: 1480px;
+  padding: 32px 48px 0;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 56px;
+}
+
+/* Hero image — full-width, spans above the two-column body.
+   Silhouette fallback uses the same aspect ratio so the layout is stable
+   whether or not we have a photograph yet. */
+.detail .hero {
+  position: relative;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 48px;
+  background: transparent;
+}
+.detail .hero img {
+  display: block;
+  width: 100%;
+  max-height: 540px;
+  object-fit: cover;
+  background: var(--paper-deep);
+}
+.detail .hero figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 4px 0;
+  font-family: var(--ui);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-mute);
+}
+.detail .hero figcaption .caption {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.detail .hero figcaption .credit {
+  font-family: var(--ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: right;
+  white-space: nowrap;
+}
+.detail .hero figcaption a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ink-mute);
+}
+.detail .hero figcaption a:hover { color: var(--ink); }
+
+.detail .hero-silhouette {
+  position: relative;
+  aspect-ratio: 2.4 / 1;
+  overflow: hidden;
+  background: var(--paper-deep);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.detail .hero-silhouette svg {
+  width: 40%;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+.detail .hero-silhouette .hero-note {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-mute);
+  background: rgba(244, 239, 230, 0.85);
+  padding: 4px 10px;
+}
+.detail .long .kicker {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 0 0 12px;
+}
+.detail .long h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+.detail .long .place-line {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-soft);
+  margin: 0 0 24px;
+}
+.detail .factline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  padding: 18px 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--ui);
+  margin-bottom: 24px;
+}
+.detail .factline .fact { display: flex; flex-direction: column; gap: 4px; }
+.detail .factline .fact .key {
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.detail .factline .fact .val {
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ink);
+}
+.detail .factline .fact .val.status {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.detail .factline .fact .val.status .dot {
+  width: 11px; height: 11px; border-radius: 50%;
+}
+
+.detail .long .summary {
+  font-family: var(--body);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 62ch;
+  margin: 0 0 28px;
+}
+/* Drop cap on the first summary paragraph — the memorial-inscription
+   touch. Set in Guardian Headline at a large size, coloured ivy to pull
+   the topic palette into the body copy. */
+.detail .long .summary::first-letter {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 4.2em;
+  line-height: 0.9;
+  float: left;
+  margin: 6px 10px 0 0;
+  color: var(--ivy);
+}
+
+/* ----- Editorial panels within the detail body ----- */
+/* All panels share one rhythm: generous space above, no visible
+   separator. The section eyebrow does the work of announcing a new
+   block. Everything sits in one column of 64ch. */
+.detail .panel {
+  margin: 40px 0 0;
+  max-width: 64ch;
+}
+.detail .panel-context { max-width: 64ch; }
+.detail .panel:first-of-type { margin-top: 16px; }
+.detail .section-h {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 14px;
+}
+.detail .mini-h {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 22px 0 8px;
+}
+.detail .para {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  max-width: 62ch;
+}
+.detail .pull {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink);
+  padding: 2px 0 6px 20px;
+  border-left: 3px solid var(--ivy-soft);
+  margin: 0 0 22px;
+}
+.detail .pull cite {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--ui);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.detail .also {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin: 10px 0 0;
+}
+.detail .also span + span::before { content: none; }
+
+/* Timeline of fabric phases */
+.detail .timeline {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 16px;
+  border-left: 2px solid var(--paper-rule);
+}
+.detail .timeline li {
+  position: relative;
+  padding: 6px 0 14px 24px;
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.detail .timeline li::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ivy-soft);
+  border: 2px solid var(--paper);
+}
+.detail .timeline .when {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+  margin-bottom: 2px;
+}
+.detail .timeline .what {
+  display: block;
+  color: var(--ink);
+}
+
+/* Interior features — elegant dotted-leader list */
+.detail .features {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 14px;
+}
+.detail .features li {
+  padding: 10px 0;
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  border-bottom: 1px dotted var(--paper-rule);
+}
+.detail .features li:last-child { border-bottom: none; }
+.detail .features li::before {
+  content: '§ ';
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ivy-soft);
+  margin-right: 4px;
+}
+
+.detail blockquote {
+  margin: 0 0 22px;
+  padding: 4px 0 4px 20px;
+  border-left: 3px solid var(--ivy);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink);
+  font-style: italic;
+  max-width: 36em;
+}
+.detail blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--ui);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.detail .meta-row {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+}
+.detail .meta-row strong {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Context grid — two-column key/value stats in a dense grid */
+.detail .panel-context {
+  max-width: 780px;
+}
+.detail .context-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--paper-rule);
+  border-left: 1px solid var(--paper-rule);
+}
+.detail .context-grid > div {
+  padding: 12px 16px;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.detail .context-grid dt {
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 4px;
+}
+.detail .context-grid dd {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.4;
+}
+.detail .context-grid .tk {
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+/* People list */
+.detail .people {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.detail .people li {
+  padding: 10px 0;
+  border-bottom: 1px dotted var(--paper-rule);
+}
+.detail .people li:last-child { border-bottom: none; }
+.detail .people .pname {
+  display: block;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--ink);
+}
+.detail .people .prole {
+  display: block;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+
+/* Dispatches */
+.detail .dispatches a {
+  display: block;
+  padding: 16px 18px;
+  background: var(--paper-deep);
+  border-left: 3px solid var(--guardian-blue);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 140ms;
+  margin-bottom: 8px;
+}
+.detail .dispatches a:hover { background: #ded3be; }
+.detail .dispatches .article-kicker {
+  font: 700 10px/1 var(--ui);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--rust);
+  display: block;
+  margin-bottom: 8px;
+}
+.detail .dispatches .article-title {
+  font: 500 18px/1.25 var(--display);
+  display: block;
+}
+.detail .dispatches .article-byline {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--ui);
+  font-size: 12px;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+
+.detail .sidecar {
+  font-family: var(--ui);
+}
+.detail .sidecar .chapel {
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-rule);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+/* CSS silhouette: simple church-in-a-churchyard illustration, warms the
+   card when we haven't seeded a photograph yet. */
+.detail .sidecar .chapel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(180, 125, 44, 0.08), transparent 55%),
+    radial-gradient(ellipse at 50% 85%, rgba(18,18,18,0.12), transparent 55%);
+}
+.detail .sidecar .chapel svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.detail .sidecar .chapel .tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font: 700 10px/1 var(--ui);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.detail .sidecar .chapel .tag .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.detail .sidecar .submit-card {
+  padding: 20px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--ui);
+}
+.detail .sidecar .submit-card .label {
+  font: 700 10px/1 var(--ui);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--guardian-yellow);
+  margin: 0 0 8px;
+}
+.detail .sidecar .submit-card h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--paper);
+}
+.detail .sidecar .submit-card p {
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(244, 239, 230, 0.82);
+  margin: 0 0 16px;
+}
+.detail .sidecar .submit-card button {
+  font: 700 12px/1 var(--ui);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  background: var(--guardian-yellow);
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background 120ms, color 120ms;
+}
+.detail .sidecar .submit-card button:hover {
+  background: var(--paper);
+}
+
+.detail .sidecar .sources {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-rule);
+  font: italic 12px/1.5 var(--body);
+  color: var(--ink-mute);
+}
+.detail .sidecar .sources a {
+  color: var(--guardian-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--guardian-blue);
+}
+.detail .sidecar .sources a:hover { border-bottom-style: solid; }
+.detail .sidecar .sources .nolink {
+  color: var(--ink-mute);
+  border-bottom: 1px dotted var(--paper-rule);
+  padding-bottom: 1px;
+}
+.detail .sidecar .sources .prov {
+  display: block;
+  margin-top: 10px;
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+
+/* ----- Submission modal ----- */
+.submit-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 18, 18, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.submit-modal.is-open { display: flex; }
+.submit-modal .box {
+  background: var(--paper);
+  max-width: 520px;
+  width: 100%;
+  padding: 36px;
+  border: 1px solid var(--ink);
+  position: relative;
+}
+.submit-modal .box .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-family: var(--display);
+  font-size: 22px;
+  color: var(--ink-mute);
+  cursor: pointer;
+  padding: 6px 10px;
+}
+.submit-modal .box .close:hover { color: var(--ink); }
+.submit-modal .box .kicker {
+  font: 700 10px/1 var(--ui);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 0 0 10px;
+}
+.submit-modal .box h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+.submit-modal .box .intro {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+.submit-modal label {
+  display: block;
+  font: 700 11px/1 var(--ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 6px;
+}
+.submit-modal textarea,
+.submit-modal input[type=text],
+.submit-modal input[type=email] {
+  width: 100%;
+  font: 400 15px/1.4 var(--body);
+  padding: 10px 12px;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-deep);
+  color: var(--ink);
+  margin-bottom: 16px;
+  resize: vertical;
+}
+.submit-modal textarea:focus,
+.submit-modal input:focus {
+  outline: none;
+  border-color: var(--guardian-blue);
+}
+.submit-modal .small {
+  font: italic 12px/1.45 var(--body);
+  color: var(--ink-mute);
+  margin-bottom: 18px;
+}
+.submit-modal .submit-btn {
+  font: 700 12px/1 var(--ui);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 13px 20px;
+  background: var(--guardian-blue);
+  color: var(--paper);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+.submit-modal .submit-btn:hover { background: var(--ink); }
+.submit-modal .sent {
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--ivy);
+  margin: 16px 0 0;
+}
+
+/* ----- Footer ----- */
+footer.foot {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 28px 48px 56px;
+  border-top: 1px solid var(--paper-rule);
+  font: italic 13px/1.55 var(--body);
+  color: var(--ink-mute);
+}
+footer.foot a {
+  color: var(--guardian-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--guardian-blue);
+}
+footer.foot a:hover { border-bottom-style: solid; }
+
+/* ----- Mobile ----- */
+@media (max-width: 960px) {
+  .masthead {
+    grid-template-columns: 1fr;
+    padding: 24px 20px 16px;
+    gap: 16px;
+  }
+  .masthead .stat { text-align: left; }
+  .masthead .stat .big { font-size: 28px; display: inline-block; margin-right: 8px; }
+  .masthead .stat .stat-sub { display: inline; }
+  .rule-band { padding: 0 20px; }
+  .subnav { padding: 10px 20px 0; gap: 18px; }
+  main.shell {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 24px;
+  }
+  .finder, .reading-panel { position: static; }
+  #map { height: 420px; }
+  .detail {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 24px;
+  }
+  .detail .sidecar {
+    order: -1;
+  }
+  .detail .sidecar .chapel {
+    aspect-ratio: 16 / 10;
+  }
+  footer.foot { padding: 20px; }
+}

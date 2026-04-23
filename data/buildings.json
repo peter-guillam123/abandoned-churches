@@ -1,0 +1,512 @@
+{
+  "meta": {
+    "title": "Friendless — a register of the UK's closed and at-risk churches",
+    "updated": "2026-04-23",
+    "schemaVersion": 2,
+    "note": "Schema v2 — nested by editorial panel. St Tyfrydog's is the strawman, fully sourced across every slot. Other buildings are partial; empty slots are honest nulls, not hidden gaps."
+  },
+  "buildings": [
+    {
+      "id": "st-tyfrydog-llandyfrydog",
+      "name": "St Tyfrydog's",
+      "dedicatedTo": "Tyfrydog",
+      "denomination": {
+        "current": "Church in Wales",
+        "historical": []
+      },
+      "place": {
+        "settlement": "Llandyfrydog",
+        "region": "Anglesey",
+        "parish": "Rhosybol",
+        "council": "Isle of Anglesey",
+        "ward": "Twrcelyn",
+        "constituency": "Ynys Môn",
+        "nation": "Wales",
+        "setting": "rural"
+      },
+      "lat": 53.3403,
+      "lon": -4.3414,
+      "nationalGridRef": "SH 443 853",
+      "summary": "A tiny medieval church in a circular churchyard, half-reclaimed by ivy. Closed in 2020 after congregations had fallen to three or four people. Vested in Friends of Friendless Churches this year; a new roof and drainage are planned for 2026 at an estimated cost of £350,000.",
+
+      "listing": {
+        "grade": "II*",
+        "listedOn": "1970-05-12",
+        "body": "Cadw",
+        "reason": "A good Medieval rural church which retains much of its Medieval fabric.",
+        "associated": [
+          { "what": "Churchyard wall", "grade": "II" },
+          { "what": "Sundial", "grade": "II", "note": "Brass, 18th century, standing in the base of a medieval stone cross" }
+        ]
+      },
+      "fabric": {
+        "firstWorship": "c. 450",
+        "phases": [
+          { "year": "c. 1400", "what": "Nave and chancel arch — the oldest surviving parts of the present building" },
+          { "year": "late 15th c.", "what": "Chancel rebuilt" },
+          { "year": "1823", "what": "First major restoration; box pews added" },
+          { "year": "1862", "what": "Second restoration; porch and vestry added" }
+        ],
+        "materials": "Rough, small, squared stones, dressed with limestone. Slate roof with a stone bellcote.",
+        "plan": "Nave c. 24'9\" × 23'6\"; chancel c. 23'3\" × 18'9\"; pointed arch between.",
+        "style": "Medieval; Gothic"
+      },
+      "interior": {
+        "features": [
+          "Painted Georgian box pews with panelled doors and open back benches — 19th-century restoration",
+          "Pale blue plaster between the rafters, against dark arched-braced collared roof trusses",
+          "Three-light east window of late-15th-century stonework, glazed 1873 by W.H. Sullivan of Liverpool — the only stained glass",
+          "Single bell in the stone bellcote (clapper rusted and fallen)",
+          "Elizabethan silver communion cup and a silver paten dated 1721",
+          "Memorial dated 1791",
+          "Bulkeley family seat marked 'R.B. 1630'"
+        ]
+      },
+
+      "status": "rescued",
+      "statusHistory": [
+        { "date": "2020-11-22", "event": "Last service held; church closed for worship", "source": "Church in Wales" },
+        { "date": "2026", "event": "Vested in Friends of Friendless Churches", "source": "Friends of Friendless Churches" }
+      ],
+      "custodian": {
+        "body": "Friends of Friendless Churches",
+        "since": "2026",
+        "previously": "Church in Wales"
+      },
+      "lastService": "2020-11-22",
+      "condition": {
+        "summary": "Roof leaking in places, daylight visible through it. Ivy climbing the exterior walls and advancing into the porch. Plaster fallen from the ceiling onto the box pews. Vestry floor collapsed under the weight of a table. Bell clapper rusted and fallen.",
+        "plannedWorks": [
+          "Repointing",
+          "Renewing the rainwater goods",
+          "Patching the holes in the roof",
+          "Replacing rotten flooring",
+          "Redecorating interior walls"
+        ],
+        "worksTimeline": "Target reopening end of 2026",
+        "estimatedCost": "£350,000 (including VAT)"
+      },
+
+      "context": {
+        "lsoa": { "code": "W01000021", "name": "Isle of Anglesey 002C" },
+        "msoa": { "code": "W02000002", "name": "Isle of Anglesey 002" },
+        "ruralUrban": "Smaller rural: Further from a major town or city (ONS 2021)",
+        "ruralUrbanPrior": "Rural hamlet and isolated dwellings in a sparse setting (2011)",
+        "travelToWorkArea": "Bangor and Holyhead",
+        "nationalPark": null,
+        "deprivationDecile": null,
+        "deprivationSource": "WIMD 2025 — pending direct statswales.gov.wales fetch"
+      },
+
+      "use": {
+        "servicesStatus": "None — closed for worship since November 2020",
+        "lateCongregationSize": "Three to six regulars; larger for Christmas and harvest festival",
+        "openingHours": null
+      },
+      "people": [
+        { "name": "Tom Bown", "role": "Former warden; congregant since childhood", "age": 87 },
+        { "name": "Jane Bown", "role": "Wife of the former warden; played the organ at services", "age": 78 },
+        { "name": "Peggy Thomas", "role": "Tom's sister; married at the church 21 July 1962", "age": 85 },
+        { "name": "The Rev Kevin Ellis", "role": "Took the last service on 22 November 2020" },
+        { "name": "Rachel Morley", "role": "Director, Friends of Friendless Churches" }
+      ],
+      "quotes": [
+        { "quote": "What upset Tom most when it closed was that the key went, and he was never allowed into the church again.", "attribution": "Jane Bown" },
+        { "quote": "You can't carry on if people aren't going; there's no point sending clergy if there's no one there.", "attribution": "Tom Bown" },
+        { "quote": "If we didn't step in, what would happen here? It would just sit there, the holes in the roof would get bigger, the ivy would take over, it would still be a problem in 10 years' time — just a bigger problem.", "attribution": "Rachel Morley, Friends of Friendless Churches" }
+      ],
+
+      "coverage": {
+        "guardian": [
+          {
+            "title": "The Welsh church claimed by spiders and ivy: what do Britain's derelict churches say about our health and happiness?",
+            "author": "Sam Wollaston",
+            "photographer": "Christopher Thomond",
+            "date": "2026-04-23",
+            "seriesPosition": 2
+          }
+        ]
+      },
+
+      "imagery": {
+        "hero": {
+          "url": "https://s0.geograph.org.uk/photos/19/34/193473_218787ea.jpg",
+          "thumbUrl": "https://s0.geograph.org.uk/geophotos/19/34/193473_218787ea_213x160.jpg",
+          "caption": "St Tyfrydog's from the west-northwest.",
+          "credit": "Nigel Williams",
+          "source": "Geograph",
+          "sourceUrl": "https://www.geograph.org.uk/photo/193473",
+          "licence": "CC-BY-SA 2.0",
+          "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "date": "2006-06-28"
+        },
+        "gallery": []
+      },
+
+      "sources": [
+        { "label": "Friends of Friendless Churches — St Tyfrydog's", "url": "https://friendsoffriendlesschurches.org.uk/church/st-tyfrydogs-llandyfrydog-anglesey/" },
+        { "label": "Cadw listed-building entry (Grade II*, 12 May 1970)", "url": null },
+        { "label": "Coflein (RCAHMW record 43649)", "url": "https://coflein.gov.uk/en/site/43649/details/st-tyfrydogs-church-llandyfrydog" },
+        { "label": "Wikipedia: St Tyfrydog's Church, Llandyfrydog", "url": "https://en.wikipedia.org/wiki/St_Tyfrydog%27s_Church,_Llandyfrydog" },
+        { "label": "British Listed Buildings", "url": "https://britishlistedbuildings.co.uk/300005360-church-of-st-tyfrydog-rhosybol" }
+      ],
+      "provenance": "Identity, fabric and interior from the Cadw list entry, RCAHMW's Coflein record, the Friends of Friendless Churches page and Wikipedia. Geography from postcodes.io (LL71 8AG). Photograph Nigel Williams via Geograph, CC-BY-SA 2.0. People, quotes and dispatch from The Guardian, 23 April 2026. WIMD decile still to source."
+    },
+
+    {
+      "id": "st-baglan-llanfaglan",
+      "name": "St Baglan's",
+      "dedicatedTo": "Baglan",
+      "denomination": { "current": "Church in Wales", "historical": [] },
+      "place": {
+        "settlement": "Llanfaglan",
+        "region": "Gwynedd",
+        "parish": "Llanfaglan",
+        "council": "Gwynedd",
+        "ward": null,
+        "constituency": null,
+        "nation": "Wales",
+        "setting": "rural"
+      },
+      "lat": 53.1153,
+      "lon": -4.2866,
+      "nationalGridRef": null,
+      "summary": "A small stone church set alone in a field above the Menai Strait, filled with 18th-century box pews and lit only by candles. No electricity, no road to the door — reached on foot across the fields.",
+
+      "listing": {
+        "grade": "I",
+        "listedOn": null,
+        "body": "Cadw",
+        "reason": null,
+        "associated": []
+      },
+      "fabric": {
+        "firstWorship": null,
+        "phases": [
+          { "year": "13th c.", "what": "Earliest fabric" },
+          { "year": "16th–17th c.", "what": "Additions and repairs" }
+        ],
+        "materials": null,
+        "plan": null,
+        "style": null
+      },
+      "interior": {
+        "features": [
+          "18th-century box pews",
+          "Lit only by candles — no electricity"
+        ]
+      },
+
+      "status": "preserved",
+      "statusHistory": [
+        { "date": "1999", "event": "Vested in Friends of Friendless Churches", "source": "Friends of Friendless Churches" }
+      ],
+      "custodian": { "body": "Friends of Friendless Churches", "since": "1999", "previously": "Church in Wales" },
+      "lastService": null,
+      "condition": {
+        "summary": "Sound following conservation works. Used occasionally for services and events.",
+        "plannedWorks": [],
+        "worksTimeline": null,
+        "estimatedCost": null
+      },
+
+      "context": {
+        "lsoa": null, "msoa": null, "ruralUrban": null, "ruralUrbanPrior": null,
+        "travelToWorkArea": null, "nationalPark": null,
+        "deprivationDecile": null, "deprivationSource": null
+      },
+      "use": {
+        "servicesStatus": "Occasional services and events",
+        "lateCongregationSize": null,
+        "openingHours": "By arrangement; reached on foot across the fields"
+      },
+      "people": [],
+      "quotes": [],
+      "coverage": { "guardian": [] },
+
+      "imagery": { "hero": null, "gallery": [] },
+
+      "sources": [
+        { "label": "Friends of Friendless Churches", "url": "https://friendsoffriendlesschurches.org.uk/" }
+      ],
+      "provenance": "Sparse schema-v2 record. Coordinate from OSM. Everything else pending Cadw / Coflein / FoFC direct fetch."
+    },
+
+    {
+      "id": "all-saints-burstwick",
+      "name": "All Saints",
+      "dedicatedTo": "All Saints",
+      "denomination": { "current": "Church of England (Diocese of York)", "historical": [] },
+      "place": {
+        "settlement": "Burstwick",
+        "region": "East Riding of Yorkshire",
+        "parish": "Burstwick",
+        "council": "East Riding of Yorkshire",
+        "ward": null,
+        "constituency": null,
+        "nation": "England",
+        "setting": "village"
+      },
+      "lat": 53.7315,
+      "lon": -0.1415,
+      "nationalGridRef": null,
+      "summary": "A medieval parish church in a Holderness village of around 2,000 people. The congregation has been unable to raise the £250,000 needed to repair the roof — a sum the National Churches Trust notes would probably have been reachable in a wealthier part of the country.",
+
+      "listing": {
+        "grade": "II*",
+        "listedOn": null,
+        "body": "Historic England",
+        "reason": null,
+        "associated": []
+      },
+      "fabric": {
+        "firstWorship": null,
+        "phases": [
+          { "year": "12th c.", "what": "Earliest fabric" },
+          { "year": "14th–15th c.", "what": "Substantially rebuilt" }
+        ],
+        "materials": null, "plan": null, "style": null
+      },
+      "interior": { "features": [] },
+
+      "status": "at-risk",
+      "statusHistory": [],
+      "custodian": { "body": "Parochial Church Council", "since": null, "previously": null },
+      "lastService": null,
+      "condition": {
+        "summary": "Roof repairs required. The congregation has been unable to raise the £250,000 needed.",
+        "plannedWorks": [],
+        "worksTimeline": null,
+        "estimatedCost": "~£250,000 funding shortfall"
+      },
+
+      "context": {
+        "lsoa": null, "msoa": null, "ruralUrban": null, "ruralUrbanPrior": null,
+        "travelToWorkArea": null, "nationalPark": null,
+        "deprivationDecile": null, "deprivationSource": null
+      },
+      "use": {
+        "servicesStatus": "In active use for worship",
+        "lateCongregationSize": null,
+        "openingHours": null
+      },
+      "people": [],
+      "quotes": [
+        { "quote": "Even with declining attendances, if that was Hertfordshire, the community would probably have been able to rustle up the money.", "attribution": "Sir Philip Rutnam, National Churches Trust" }
+      ],
+      "coverage": { "guardian": [] },
+
+      "imagery": { "hero": null, "gallery": [] },
+
+      "sources": [
+        { "label": "National Churches Trust", "url": "https://www.nationalchurchestrust.org/" }
+      ],
+      "provenance": "Sparse schema-v2 record. Named in The Guardian, 23 April 2026. Listing, fabric and condition detail pending Historic England NHLE + Heritage at Risk fetch."
+    },
+
+    {
+      "id": "st-mary-mundon",
+      "name": "St Mary's",
+      "dedicatedTo": "St Mary the Virgin",
+      "denomination": { "current": "Church of England (redundant)", "historical": [] },
+      "place": {
+        "settlement": "Mundon",
+        "region": "Essex",
+        "parish": "Mundon",
+        "council": "Maldon",
+        "ward": null,
+        "constituency": null,
+        "nation": "England",
+        "setting": "rural"
+      },
+      "lat": 51.6898,
+      "lon": 0.7035,
+      "nationalGridRef": null,
+      "summary": "A lonely church among oak trees and saltmarsh on the Essex coast, famous for its weatherboarded timber belfry and 18th-century box pews. One of Friends of Friendless Churches' earliest rescues — without which it would almost certainly have been demolished.",
+
+      "listing": {
+        "grade": "I",
+        "listedOn": null,
+        "body": "Historic England",
+        "reason": null,
+        "associated": []
+      },
+      "fabric": {
+        "firstWorship": null,
+        "phases": [
+          { "year": "14th c.", "what": "Earliest surviving fabric; timber-framed tower" }
+        ],
+        "materials": "Stone with a weatherboarded timber-framed bell-tower.",
+        "plan": null, "style": null
+      },
+      "interior": {
+        "features": [
+          "18th-century box pews"
+        ]
+      },
+
+      "status": "preserved",
+      "statusHistory": [
+        { "date": "1975", "event": "Declared redundant and vested in Friends of Friendless Churches", "source": "Friends of Friendless Churches" }
+      ],
+      "custodian": { "body": "Friends of Friendless Churches", "since": "1975", "previously": "Church of England" },
+      "lastService": "1975",
+      "condition": {
+        "summary": "Conserved. Opened by appointment and for occasional services.",
+        "plannedWorks": [], "worksTimeline": null, "estimatedCost": null
+      },
+
+      "context": {
+        "lsoa": null, "msoa": null, "ruralUrban": null, "ruralUrbanPrior": null,
+        "travelToWorkArea": null, "nationalPark": null,
+        "deprivationDecile": null, "deprivationSource": null
+      },
+      "use": {
+        "servicesStatus": "Occasional services",
+        "lateCongregationSize": null,
+        "openingHours": "By appointment"
+      },
+      "people": [],
+      "quotes": [],
+      "coverage": { "guardian": [] },
+      "imagery": { "hero": null, "gallery": [] },
+      "sources": [
+        { "label": "Friends of Friendless Churches", "url": "https://friendsoffriendlesschurches.org.uk/" }
+      ],
+      "provenance": "Sparse schema-v2 record. Coordinate from OSM."
+    },
+
+    {
+      "id": "brick-lane-jamme-masjid",
+      "name": "Brick Lane Jamme Masjid",
+      "dedicatedTo": null,
+      "denomination": {
+        "current": "Muslim — Jamme Masjid",
+        "historical": ["Huguenot Protestant (1743)", "Wesleyan Methodist (1819)", "Machzike Adass synagogue (1898)"]
+      },
+      "place": {
+        "settlement": "Spitalfields",
+        "region": "London",
+        "parish": null,
+        "council": "Tower Hamlets",
+        "ward": null,
+        "constituency": null,
+        "nation": "England",
+        "setting": "urban"
+      },
+      "lat": 51.5194,
+      "lon": -0.0721,
+      "nationalGridRef": null,
+      "summary": "One building, four congregations. A Huguenot church in 1743; a Wesleyan Methodist chapel in 1819; the Machzike Adass synagogue from 1898; a mosque since 1976. A rare example of a place of worship that has passed from one community to the next as the streets around it changed.",
+
+      "listing": {
+        "grade": "II*",
+        "listedOn": null,
+        "body": "Historic England",
+        "reason": null,
+        "associated": []
+      },
+      "fabric": {
+        "firstWorship": "1743",
+        "phases": [
+          { "year": "1743", "what": "Built as La Neuve Église for French Huguenot refugees" },
+          { "year": "1819", "what": "Became a Wesleyan Methodist chapel" },
+          { "year": "1898", "what": "Re-consecrated as the Machzike Adass synagogue" },
+          { "year": "1976", "what": "Converted to a mosque" }
+        ],
+        "materials": null, "plan": null, "style": "Georgian"
+      },
+      "interior": { "features": [] },
+
+      "status": "repurposed",
+      "statusHistory": [],
+      "custodian": { "body": "London Jamme Masjid Trust", "since": "1976", "previously": null },
+      "lastService": null,
+      "condition": { "summary": "In active use as a mosque.", "plannedWorks": [], "worksTimeline": null, "estimatedCost": null },
+
+      "context": {
+        "lsoa": null, "msoa": null, "ruralUrban": null, "ruralUrbanPrior": null,
+        "travelToWorkArea": null, "nationalPark": null,
+        "deprivationDecile": null, "deprivationSource": null
+      },
+      "use": {
+        "servicesStatus": "Active mosque",
+        "lateCongregationSize": null,
+        "openingHours": null
+      },
+      "people": [],
+      "quotes": [],
+      "coverage": { "guardian": [] },
+      "imagery": { "hero": null, "gallery": [] },
+      "sources": [],
+      "provenance": "Sparse schema-v2 record. Coordinate from OSM."
+    },
+
+    {
+      "id": "abney-park-chapel",
+      "name": "Abney Park Chapel",
+      "dedicatedTo": null,
+      "denomination": { "current": "Non-denominational (originally for Dissenters)", "historical": [] },
+      "place": {
+        "settlement": "Stoke Newington",
+        "region": "London",
+        "parish": null,
+        "council": "Hackney",
+        "ward": null,
+        "constituency": null,
+        "nation": "England",
+        "setting": "urban"
+      },
+      "lat": 51.5622,
+      "lon": -0.0780,
+      "nationalGridRef": null,
+      "summary": "A roofless Gothic chapel at the heart of the UK's first purpose-built non-denominational burial ground, and later a magnificent Victorian cemetery. Stripped by fire and decay since the 1970s; partial restoration begun but the interior remains open to the sky.",
+
+      "listing": {
+        "grade": "II",
+        "listedOn": null,
+        "body": "Historic England",
+        "reason": null,
+        "associated": []
+      },
+      "fabric": {
+        "firstWorship": null,
+        "phases": [
+          { "year": "1840", "what": "Built by William Hosking — Britain's first purpose-built non-denominational chapel" }
+        ],
+        "materials": null, "plan": null, "style": "Gothic Revival"
+      },
+      "interior": { "features": [] },
+
+      "status": "at-risk",
+      "statusHistory": [
+        { "date": "1978", "event": "Closed; cemetery fell into dereliction", "source": null }
+      ],
+      "custodian": { "body": "Abney Park Trust / London Borough of Hackney", "since": null, "previously": null },
+      "lastService": "1978",
+      "condition": {
+        "summary": "Roofless. Stonework stabilised. Partial restoration completed 2023; interior remains open to the sky.",
+        "plannedWorks": [], "worksTimeline": null, "estimatedCost": null
+      },
+
+      "context": {
+        "lsoa": null, "msoa": null, "ruralUrban": null, "ruralUrbanPrior": null,
+        "travelToWorkArea": null, "nationalPark": null,
+        "deprivationDecile": null, "deprivationSource": null
+      },
+      "use": {
+        "servicesStatus": "Closed",
+        "lateCongregationSize": null,
+        "openingHours": null
+      },
+      "people": [],
+      "quotes": [],
+      "coverage": { "guardian": [] },
+      "imagery": { "hero": null, "gallery": [] },
+      "sources": [
+        { "label": "Abney Park", "url": "https://www.abneypark.org/" }
+      ],
+      "provenance": "Sparse schema-v2 record. Coordinate is Abney Park cemetery centroid."
+    }
+  ]
+}

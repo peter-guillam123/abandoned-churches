@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — Friendless</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23F4EFE6' width='32' height='32'/%3E%3Cpath d='M16 4 L16 28 M10 10 L22 10 M13 14 L13 28 M19 14 L19 28' stroke='%23052962' stroke-width='2' fill='none'/%3E%3C/svg%3E" type="image/svg+xml" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <style>
+    .long {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 48px 80px;
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .long .kicker {
+      font-family: var(--ui);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin: 0 0 12px;
+    }
+    .long h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin: 0 0 20px;
+    }
+    .long h3 {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 1.2;
+      color: var(--ink);
+      margin: 36px 0 12px;
+    }
+    .long p { margin: 0 0 18px; }
+    .long em { color: var(--ink); font-style: italic; }
+    .long a { color: var(--guardian-blue); text-decoration: none; border-bottom: 1px dotted var(--guardian-blue); }
+    .long a:hover { border-bottom-style: solid; }
+    .long .statuses {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+    }
+    .long .statuses li {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--ink-soft);
+    }
+    .long .statuses .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translateY(1px);
+      flex-shrink: 0;
+    }
+    .long .statuses strong {
+      display: block;
+      font-family: var(--ui);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .long ul.plain {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+    }
+    .long ul.plain li {
+      padding: 10px 0;
+      border-bottom: 1px dotted var(--paper-rule);
+    }
+    .long ul.plain li:last-child { border-bottom: none; }
+    @media (max-width: 720px) {
+      .long { padding: 20px; }
+      .long .statuses { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="masthead">
+    <h1 class="title">
+      <a href="./" aria-label="Friendless — home">Friend<span class="and">less</span></a>
+    </h1>
+    <p class="dek">
+      How the register is built, what each status means, and how to contribute.
+    </p>
+    <div class="stat">
+      <span class="big">v0.1</span>
+      prototype<span class="stat-sub">April 2026</span>
+    </div>
+  </header>
+
+  <div class="rule-band"><span class="ornament" aria-hidden="true">&#x2720;</span></div>
+
+  <nav class="subnav" aria-label="Primary">
+    <a href="./">Find one near you</a>
+    <a href="./stories.html">The series</a>
+    <a href="./about.html" class="active" aria-current="page">About</a>
+  </nav>
+
+  <section class="long">
+    <p class="kicker">About this register</p>
+    <h2>A companion to The Guardian's reporting on derelict churches.</h2>
+
+    <p>"Abandoned" is not a category that appears in any of the official records. A closed church might be <em>redundant</em> to one body, <em>at risk</em> on another's register, and in the same year <em>vested</em> in a conservation charity that will spend a decade on its roof. This register tries to hold those categories together on one map so that a reader can see what is actually happening to a building, not only what happened to its paperwork.</p>
+
+    <h3>What the status colours mean</h3>
+    <ul class="statuses">
+      <li><span class="dot" style="background: var(--status-at-risk)"></span><span><strong>At risk</strong>The building has serious condition problems and no funded plan to fix them. Most often from Historic England's Heritage at Risk register, or equivalent.</span></li>
+      <li><span class="dot" style="background: var(--status-rescued)"></span><span><strong>Rescued</strong>Recently taken into conservation care — a new roof or vesting agreement within the last few years.</span></li>
+      <li><span class="dot" style="background: var(--status-preserved)"></span><span><strong>Preserved</strong>Held long-term by a conservation trust. No longer in regular worship, but the fabric is being actively maintained.</span></li>
+      <li><span class="dot" style="background: var(--status-repurposed)"></span><span><strong>Repurposed</strong>The building is in active use, but not as a church. A mosque, a community centre, flats.</span></li>
+      <li><span class="dot" style="background: var(--status-closed)"></span><span><strong>Closed, unresolved</strong>No longer in use; no plan yet for what happens next. The holding pattern that precedes either rescue or loss.</span></li>
+      <li><span class="dot" style="background: var(--status-demolished)"></span><span><strong>Lost</strong>Demolished, or so far gone that the building no longer exists in any meaningful sense. Included for memory.</span></li>
+    </ul>
+
+    <h3>Sources the register draws from</h3>
+    <ul class="plain">
+      <li><a href="https://www.nationalchurchestrust.org/">National Churches Trust</a> — the closest thing to an all-denomination census, with condition survey data.</li>
+      <li><a href="https://historicengland.org.uk/advice/heritage-at-risk/">Historic England Heritage at Risk</a> — the statutory at-risk register for England.</li>
+      <li><a href="https://friendsoffriendlesschurches.org.uk/">Friends of Friendless Churches</a> — the charity that rescues and holds ~70 churches in England and Wales.</li>
+      <li><a href="https://www.visitchurches.org.uk/">Churches Conservation Trust</a> — ~350 redundant CofE churches in permanent care.</li>
+      <li><a href="https://www.churchinwales.org.uk/">Church in Wales</a> — the redundant churches list, including St Tyfrydog's.</li>
+      <li><a href="https://buildingsatrisk.org.uk/">Buildings at Risk Register for Scotland</a> — the Scottish equivalent, run by the Scottish Civic Trust.</li>
+      <li><a href="https://datamap.gov.wales/">DataMapWales / Cadw</a> — Welsh historic assets.</li>
+      <li><a href="https://www.planning.data.gov.uk/">Planning Data API</a> — England-wide listed buildings and heritage layers joined on UPRN.</li>
+    </ul>
+
+    <h3 id="contribute">How to contribute</h3>
+    <p>Every building page has an <em>Add to the record</em> button. It sends your note to an editorial queue — nothing is published automatically. We are particularly interested in:</p>
+    <ul class="plain">
+      <li>Photographs of churches from your area, especially ones that aren't widely documented.</li>
+      <li>Memories of services, weddings, funerals, harvest festivals — the ordinary life of a building.</li>
+      <li>Corrections. If a building on the register has changed status, or is already in a better state than we describe, tell us.</li>
+      <li>Tip-offs. A closed church you're worried about. A chapel that was quietly demolished. A rescue we haven't heard of.</li>
+    </ul>
+
+    <h3>Editorial notes on the prototype</h3>
+    <p>This version is a seed. Six buildings, hand-researched from public sources and the Guardian's reporting. As the series grows and the data pipelines connect — to the Heritage at Risk API, to the National Churches Trust's Church Heritage Record, to the conservation charities — the register will widen and the per-building detail will deepen. Until then, anywhere a field reads <em>provenance</em>, that's the honest record of where the information came from and how far we would stand behind it.</p>
+    <p>The basemap is OpenStreetMap, styled down toward the newsprint palette. Coordinates for each building are to village or street level; the map marker is not a surveyor's pin.</p>
+  </section>
+
+  <footer class="foot">
+    A companion to The Guardian's reporting, not an official Guardian product. Basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.
+  </footer>
+
+</body>
+</html>
