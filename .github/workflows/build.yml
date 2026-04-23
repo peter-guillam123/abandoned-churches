@@ -1,0 +1,84 @@
+name: Build register + deploy to Pages
+
+on:
+  # Manual trigger — useful for testing and the first build.
+  workflow_dispatch:
+  # Whenever main changes (and so the UI, scripts, or hand-curated data
+  # have changed), publish the current state.
+  push:
+    branches: [main]
+  # Nightly rebuild — heritage registries update in waves throughout
+  # the year, so a once-a-day refresh is plenty and keeps caches warm.
+  schedule:
+    - cron: "0 4 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: build/requirements.txt
+
+      - name: Install dependencies
+        working-directory: build
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Cache raw scrape artefacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/_cache
+            build/_raw
+          key: friendless-raw-${{ github.run_id }}
+          restore-keys: |
+            friendless-raw-
+
+      - name: Scrape Friends of Friendless Churches gazetteer
+        working-directory: build
+        run: python3 fetch_fofc.py
+
+      - name: Fetch Historic England Heritage at Risk register
+        working-directory: build
+        run: python3 fetch_heritage_at_risk.py
+
+      - name: Enrich with postcodes.io geography
+        working-directory: build
+        run: python3 enrich_postcodes.py
+
+      - name: Build the merged register
+        working-directory: build
+        run: python3 build_register.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
