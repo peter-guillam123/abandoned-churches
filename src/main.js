@@ -40,7 +40,7 @@ function visibleBuildings() {
   return state.buildings.filter((b) => state.visibleStatuses.has(b.status));
 }
 
-function renderResultList(list, { showDistance }) {
+function renderResultList(list, { showDistance, totalCount }) {
   if (!list.length) {
     el.resultList.innerHTML = '';
     el.idleState.textContent = 'No buildings match these filters. Toggle a status on the left to bring them back.';
@@ -48,7 +48,10 @@ function renderResultList(list, { showDistance }) {
     return;
   }
   el.idleState.hidden = true;
-  el.resultList.innerHTML = list.map((b) => {
+  const hint = (totalCount && totalCount > list.length)
+    ? `<li class="result-hint">Showing ${list.length} of ${totalCount.toLocaleString()} — type a postcode to find the ones nearest you.</li>`
+    : '';
+  el.resultList.innerHTML = hint + list.map((b) => {
     const color = `var(--status-${b.status})`;
     return `
       <li class="result" data-id="${b.id}">
@@ -103,6 +106,8 @@ function wireLegend() {
   });
 }
 
+const OVERVIEW_LIST_CAP = 30;
+
 function rerender() {
   filterByStatus(state.visibleStatuses);
   const list = visibleBuildings();
@@ -113,7 +118,10 @@ function rerender() {
       .slice(0, 8);
     renderResultList(withDist, { showDistance: true });
   } else {
-    renderResultList(list, { showDistance: false });
+    // In overview mode the register can be thousands of entries — a full
+    // list would be a scrolling forever. Cap with a "showing N of M" hint.
+    const capped = list.slice(0, OVERVIEW_LIST_CAP);
+    renderResultList(capped, { showDistance: false, totalCount: list.length });
   }
 }
 
@@ -227,19 +235,28 @@ function wireSubmit() {
 }
 
 async function boot() {
+  window.__bootStart = Date.now();
   const { buildings, meta } = await loadBuildings();
+  window.__bootLoaded = Date.now();
   state.buildings = buildings;
-  if (meta?.updated) el.statSub.textContent = `seed prototype · updated ${meta.updated}`;
+  if (meta?.updated) el.statSub.textContent = `prototype · updated ${meta.updated}`;
   refreshLegendCounts();
 
-  // Wait a tick for Leaflet to have loaded (deferred script tag).
+  // Wait for Leaflet core AND the markercluster plugin to load.
   await new Promise((r) => {
-    if (window.L) r();
-    else window.addEventListener('load', r, { once: true });
+    const check = () => {
+      if (window.L && window.L.markerClusterGroup) r();
+      else setTimeout(check, 50);
+    };
+    if (window.L && window.L.markerClusterGroup) r();
+    else window.addEventListener('load', check, { once: true });
   });
+  window.__bootLeafletReady = Date.now();
 
   initMap('map');
+  window.__bootInitMapDone = Date.now();
   addBuildings(state.buildings);
+  window.__bootAddBuildingsDone = Date.now();
   setClickHandler((b) => selectBuilding(b.id, { fly: true }));
   framePoints(state.buildings, 60);
 

@@ -601,6 +601,51 @@ main.shell {
   color: var(--paper) !important;
 }
 
+/* Cluster bubbles — three sizes. Palette-matched to the rest of the
+   register: ivy-deep ink on parchment, with a hairline ivy border. */
+.cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(242, 236, 221, 0.94);
+  border: 1.5px solid var(--ivy);
+  box-shadow: 0 2px 6px rgba(20, 19, 17, 0.2);
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ivy-deep);
+  transition: transform 140ms;
+}
+.cluster:hover { transform: scale(1.06); }
+.cluster.cluster-md {
+  width: 46px;
+  height: 46px;
+  font-size: 14px;
+  border-color: var(--ivy-deep);
+  border-width: 2px;
+}
+.cluster.cluster-lg {
+  width: 54px;
+  height: 54px;
+  font-size: 15px;
+  border-color: var(--rust);
+  border-width: 2px;
+  background: rgba(236, 224, 199, 0.96);
+}
+.leaflet-cluster-anim .cluster {
+  transition: transform 200ms ease-out;
+}
+/* Nix markercluster's default colour sprites — we render our own */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large,
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div { background: transparent !important; color: transparent !important; }
+
 /* Custom marker */
 .chmark {
   width: 22px;
@@ -685,6 +730,13 @@ main.shell {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+.reading-panel .result-hint {
+  font: italic 13px/1.5 var(--body);
+  color: var(--ink-mute);
+  padding: 8px 0 12px;
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 6px;
 }
 .reading-panel .result {
   padding: 14px 0;
