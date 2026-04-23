@@ -43,11 +43,6 @@ export function initMap(elId) {
     },
   });
   map.addLayer(cluster);
-
-  // Debug escape hatch — lets us poke at map and cluster from DevTools.
-  // Not used by the app itself.
-  window.__friendless = { map, cluster, markers };
-
   return map;
 }
 

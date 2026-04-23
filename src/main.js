@@ -182,7 +182,7 @@ function resetOverview() {
   framePoints(state.buildings, 60);
   el.q.value = '';
   el.headTitle.textContent = 'Six buildings to start — six stories';
-  el.readingEyebrow.textContent = 'The six seeded buildings';
+  el.readingEyebrow.textContent = 'Browsing the register';
   el.idleState.hidden = true;
   rerender();
   renderDetail(el.detail, null);
@@ -235,28 +235,24 @@ function wireSubmit() {
 }
 
 async function boot() {
-  window.__bootStart = Date.now();
   const { buildings, meta } = await loadBuildings();
-  window.__bootLoaded = Date.now();
   state.buildings = buildings;
   if (meta?.updated) el.statSub.textContent = `prototype · updated ${meta.updated}`;
   refreshLegendCounts();
 
-  // Wait for Leaflet core AND the markercluster plugin to load.
+  // Wait for Leaflet core AND the markercluster plugin to be ready. Both
+  // are deferred <script> tags; main.js (module) can run before they've
+  // finished parsing, so we poll briefly.
   await new Promise((r) => {
     const check = () => {
       if (window.L && window.L.markerClusterGroup) r();
       else setTimeout(check, 50);
     };
-    if (window.L && window.L.markerClusterGroup) r();
-    else window.addEventListener('load', check, { once: true });
+    check();
   });
-  window.__bootLeafletReady = Date.now();
 
   initMap('map');
-  window.__bootInitMapDone = Date.now();
   addBuildings(state.buildings);
-  window.__bootAddBuildingsDone = Date.now();
   setClickHandler((b) => selectBuilding(b.id, { fly: true }));
   framePoints(state.buildings, 60);
 
