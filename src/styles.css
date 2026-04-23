@@ -1,93 +1,110 @@
-/* Friendless — companion to The Guardian's series on the UK's derelict churches.
-   Design follows the "Newsroom Dataroom" palette of Guardian Angles:
-   warm newsprint paper, Guardian Egyptian display / Text Egyptian body /
-   Text Sans UI, with a hairline blue/yellow rule band beneath the masthead. */
-
-@font-face {
-  font-family: 'GH Guardian Headline';
-  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'GH Guardian Headline';
-  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'GuardianTextEgyptian';
-  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-Reg.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'GuardianTextEgyptian';
-  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-RegItalic.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'GuardianTextSans';
-  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'GuardianTextSans';
-  src: url('https://assets.guim.co.uk/static/frontend/fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Friendless — a register of the UK's derelict churches.
+   Aesthetic direction: archival heritage broadsheet. Carved-serif
+   display (Fraunces), literary body serif (Newsreader), mono micro-
+   labels (IBM Plex Mono). Vellum paper, warm-black ink, verdigris as
+   dominant accent, madder sparingly for emphasis and at-risk. */
 
 :root {
-  /* Paper — warm parchment, three tones. */
-  --paper: #F2ECDD;
-  --paper-deep: #E4D9BF;
-  --paper-rule: #C9BB9D;
+  /* Paper — a bound-volume cream pushed slightly warmer than standard
+     newsprint, with a deeper card tone and a hairline rule colour. */
+  --paper: #EFE8D5;
+  --paper-deep: #E1D6B8;
+  --paper-rule: #C4B695;
+  --bone: #F7F2E5;   /* lightest highlight — chapel plaster */
 
-  /* Ink — four tones on the page. */
-  --ink: #141311;
-  --ink-soft: #3b362d;
-  --ink-mute: #5e584c;
-  --ink-faint: #8c8575;
+  /* Ink — four tones on the page. Warmer than pure black, to read as
+     printer's ink on vellum rather than screen-grey. */
+  --ink: #1B1612;
+  --ink-soft: #3E372D;
+  --ink-mute: #6B6252;
+  --ink-faint: #988D7A;
 
-  /* Two topic accents only — ivy (living decay) and rust (oxidised
-     iron). Everything else the palette used to carry (ochre, eco
-     green, purple, yellow) has been retired so the page reads as
-     one system rather than a sampler. */
-  --ivy: #3f5a3a;
-  --ivy-soft: #6f8a62;
-  --ivy-deep: #2c4229;
-  --rust: #8b3a1a;
-  --rust-soft: #b05a36;
+  /* Two historical accents, both craft pigments.
+       Verdigris — oxidised copper, the weathervane on the steeple.
+       Madder   — the historical printing red used for at-risk + emphasis.
+     Verdigris is dominant; madder is a single strong note, never used
+     in large fields. */
+  --verdigris: #2E6951;
+  --verdigris-deep: #1E4A38;
+  --verdigris-soft: #5C8B77;
+  --madder: #7A1F1E;
+  --madder-soft: #A4463B;
 
-  /* Guardian blue is kept ONLY for link underlines + primary CTA —
-     it stops being an identity colour. */
-  --guardian-blue: #052962;
+  /* Link colour — inherit verdigris; no Guardian blue as identity.
+     We keep a cool ink-blue for hover states where underline dotting
+     isn't enough, but it's never used for headings. */
+  --link: var(--verdigris);
+  --link-hover: #1E4A38;
 
-  /* Status palette — one family. Each status is a tint of ivy or
-     rust, with stone for the in-between / closed states. */
-  --status-at-risk: var(--rust);
-  --status-rescued: var(--ivy);
-  --status-preserved: var(--ivy-soft);
-  --status-repurposed: var(--rust-soft);
-  --status-closed: #8c8575;
-  --status-demolished: #5e584c;
+  /* Status palette — disciplined to the two-accent family.
+     Rescued / preserved are tints of verdigris (living, renewed).
+     At-risk is madder (alarm). Repurposed is a soft madder. Closed
+     and lost are stones — no alarm, no renewal. */
+  --status-at-risk: var(--madder);
+  --status-rescued: var(--verdigris);
+  --status-preserved: var(--verdigris-soft);
+  --status-repurposed: var(--madder-soft);
+  --status-closed: #8C826D;
+  --status-demolished: #5E584C;
 
-  --display: 'GH Guardian Headline', Georgia, 'Times New Roman', serif;
-  --body: 'GuardianTextEgyptian', Georgia, 'Times New Roman', serif;
-  --ui: 'GuardianTextSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --mono: 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
+  /* Type stack.
+     Display: Fraunces, a contemporary soft-carved serif with opsz
+       (optical size) and SOFT axes — gives carved-stone character at
+       display sizes, with roundness pulled back for headings.
+     Body: Newsreader, a literary serif built for long-form reading.
+     Mono: IBM Plex Mono, for numbers, counters and micro-labels. */
+  --display: 'Fraunces', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --body: 'Newsreader', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  /* UI labels — Plex Mono. Reads as index-card / field-notes /
+     typewriter rather than a generic sans. */
+  --ui: 'IBM Plex Mono', 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
+  --mono: 'IBM Plex Mono', 'JetBrains Mono', 'Menlo', 'Courier New', monospace;
+
+  /* Variation shortcuts — these let us call for carved display feel
+     (high opsz, tight SOFT) vs. reading body feel (lower opsz). */
+  --display-carved: "opsz" 128, "SOFT" 0;
+  --display-warm:   "opsz" 96,  "SOFT" 40;
 }
 
 * { box-sizing: border-box; }
+
+/* ----- Page-load reveal ----------------------------------------------
+   One orchestrated entrance — masthead settles first, the rule draws
+   across, the subnav appears, then the main stage. After this, the
+   page is quiet: no hover jitter, no scroll-linked fireworks. */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ruleGrow {
+  from { transform: scaleX(0); transform-origin: left center; }
+  to   { transform: none; }
+}
+@keyframes ornamentFade {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.masthead,
+.rule-band::before, .rule-band::after,
+.rule-band .ornament,
+.subnav, main.shell, .detail, .long, footer.foot {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.masthead                { animation: revealUp 680ms   60ms; }
+.rule-band::before       { animation: ruleGrow 780ms  260ms; }
+.rule-band::after        { animation: ruleGrow 780ms  320ms; }
+.rule-band .ornament     { animation: ornamentFade 520ms 900ms; }
+.subnav                  { animation: revealUp 540ms  380ms; }
+main.shell, .long        { animation: revealUp 720ms  480ms; }
+.detail                  { animation: revealUp 720ms  280ms; }
+footer.foot              { animation: revealUp 540ms  640ms; }
+@media (prefers-reduced-motion: reduce) {
+  .masthead, .rule-band::before, .rule-band::after,
+  .rule-band .ornament, .subnav, main.shell, .detail, .long, footer.foot {
+    animation: none;
+  }
+}
 
 html, body {
   overflow-x: clip;
@@ -98,23 +115,26 @@ html, body {
 html { background: var(--paper); }
 body {
   font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
   color: var(--ink);
   background: var(--paper);
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  /* One texture only — fine dot lattice, same grit as Angles. Text
-     carries; texture is felt, not seen. */
-  background-image: radial-gradient(rgba(20, 19, 17, 0.025) 1px, transparent 1px);
-  background-size: 3px 3px;
-  background-position: 0 0;
+  font-feature-settings: "onum" 1, "liga" 1;
+  /* One atmospheric layer: a fine noise grain for paper tooth.
+     Printed-feeling, but not competing with text. */
+  background-image:
+    radial-gradient(rgba(27, 22, 18, 0.03) 1px, transparent 1px),
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 3px 3px, 220px 220px;
 }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--verdigris);
   outline-offset: 2px;
   border-radius: 2px;
 }
-.masthead .title a:focus-visible { outline-color: var(--ivy); }
+.masthead .title a:focus-visible { outline-color: var(--verdigris); }
 
 /* ----- Masthead ----- */
 .masthead {
@@ -129,34 +149,38 @@ body {
 }
 .masthead .title {
   font-family: var(--display);
-  font-weight: 700;
-  font-size: clamp(40px, 6vw, 72px);
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  color: var(--ivy);
+  font-weight: 500;
+  font-size: clamp(48px, 7.2vw, 92px);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  color: var(--ink);
   margin: 0;
+  /* Carved Fraunces — high optical size, zero SOFT rounding = stone */
+  font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 520;
 }
 .masthead .title a {
   color: inherit;
   text-decoration: none;
-  transition: opacity 150ms;
+  transition: color 200ms;
 }
-.masthead .title a:hover { opacity: 0.75; }
+.masthead .title a:hover { color: var(--verdigris); }
 .masthead .title a:focus-visible {
-  outline: 2px solid var(--ivy);
+  outline: 2px solid var(--verdigris);
   outline-offset: 4px;
 }
 .masthead .title .and {
-  font-weight: 500;
+  font-weight: 300;
   font-style: italic;
-  color: var(--ink);
+  color: var(--verdigris);
+  /* Italic Fraunces looks more flowing at slightly warmer SOFT */
+  font-variation-settings: "opsz" 144, "SOFT" 60, "wght" 380;
 }
 .masthead .dek {
   font-family: var(--body);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink-soft);
-  max-width: 46ch;
-  line-height: 1.45;
+  max-width: 44ch;
+  line-height: 1.5;
   margin: 0;
 }
 .masthead .dek em {
@@ -164,15 +188,16 @@ body {
   color: var(--ink);
 }
 .masthead .dek a {
-  color: var(--guardian-blue);
+  color: var(--link);
   text-decoration: none;
-  border-bottom: 1px dotted var(--guardian-blue);
+  border-bottom: 1px solid var(--verdigris-soft);
+  transition: border-color 180ms;
 }
-.masthead .dek a:hover { border-bottom-style: solid; }
+.masthead .dek a:hover { border-bottom-color: var(--link); }
 .masthead .stat {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-mute);
   text-align: right;
@@ -181,27 +206,30 @@ body {
 .masthead .stat .big {
   display: block;
   font-family: var(--display);
-  font-weight: 700;
-  font-size: 40px;
-  letter-spacing: -0.01em;
+  font-weight: 400;
+  font-size: 48px;
+  letter-spacing: -0.02em;
   color: var(--ink);
   text-transform: none;
+  font-variation-settings: "opsz" 96, "SOFT" 20, "wght" 420;
+  font-feature-settings: "onum" 1;
 }
 .masthead .stat .stat-sub {
   display: block;
-  margin-top: 6px;
+  margin-top: 8px;
   font-family: var(--body);
   font-style: italic;
   font-weight: 400;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--ink-mute);
+  color: var(--ink-faint);
 }
 
-/* Rule band — two hairlines in ivy + Guardian blue, with a fleuron
-   centred on the seam. Reads as a printed supplement's section rule,
-   not a news-channel bar. */
+/* Rule band — two hairlines, verdigris + madder, with an ornament
+   centred on the seam. The pairing of craft pigments — weathervane
+   green and printer's red — is the one-note identity bar for the
+   whole product. */
 .rule-band {
   max-width: 1480px;
   margin: 0 auto;
@@ -215,24 +243,24 @@ body {
 .rule-band::after {
   content: '';
   display: block;
-  height: 3px;
+  height: 2px;
 }
-.rule-band::before { background: var(--ivy); }
-.rule-band::after  { background: var(--guardian-blue); }
+.rule-band::before { background: var(--verdigris); }
+.rule-band::after  { background: var(--madder); }
 .rule-band .ornament {
   position: absolute;
   top: 50%;
   left: 75%;
   transform: translate(-50%, -50%);
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   background: var(--paper);
-  color: var(--ivy);
+  color: var(--verdigris);
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 16px/1 var(--display);
-  border-radius: 50%;
+  font: 400 18px/1 var(--display);
+  font-variation-settings: "opsz" 48, "SOFT" 100;
 }
 @media (max-width: 960px) {
   .rule-band .ornament { display: none; }
@@ -248,6 +276,9 @@ body {
   border-bottom: 1px solid var(--paper-rule);
   font-family: var(--ui);
   overflow-x: auto;
+}
+.subnav {
+  font-family: var(--mono);
 }
 .subnav a {
   display: inline-block;
@@ -265,7 +296,7 @@ body {
 .subnav a:hover { color: var(--ink); }
 .subnav a.active {
   color: var(--ink);
-  border-bottom-color: var(--guardian-blue);
+  border-bottom-color: var(--link);
 }
 
 /* ----- Layout ----- */
@@ -300,7 +331,7 @@ main.shell {
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--rust);
+  color: var(--madder);
   margin: 0 0 8px;
 }
 .finder .intro {
@@ -324,7 +355,7 @@ main.shell {
 }
 .finder input[type=text]:focus {
   outline: none;
-  border-bottom-color: var(--guardian-blue);
+  border-bottom-color: var(--link);
 }
 .finder input[type=text]::placeholder {
   color: var(--ink-mute);
@@ -345,7 +376,7 @@ main.shell {
   transition: transform 120ms, background 120ms;
 }
 .finder button[type=submit] {
-  background: var(--guardian-blue);
+  background: var(--link);
   color: var(--paper);
   flex: 1;
 }
@@ -370,7 +401,7 @@ main.shell {
   padding: 0;
   cursor: pointer;
 }
-.finder .geoloc:hover { color: var(--guardian-blue); }
+.finder .geoloc:hover { color: var(--link); }
 .finder .geoloc .icon {
   display: inline-block;
   width: 12px;
@@ -483,7 +514,7 @@ main.shell {
   position: relative;
   padding: 8px;
   background: var(--paper);
-  border: 1px solid var(--ivy);
+  border: 1px solid var(--verdigris);
 }
 /* Corner marks removed — the hairline border carries the frame. */
 .map-stage .corner-tr,
@@ -495,36 +526,40 @@ main.shell {
 /* Cartouche — a single editorial plate in the top-right, with a
    one-pixel paper-rule border. The ivy accent lives in the name,
    not the frame. */
+/* Cartouche — a printed plate caption, top-right. Reads as a label
+   tipped onto a guidebook engraving. */
 .map-stage .cartouche {
   position: absolute;
-  top: 22px;
-  right: 22px;
+  top: 20px;
+  right: 20px;
   z-index: 450;
-  padding: 10px 14px 12px;
-  background: rgba(242, 236, 221, 0.95);
-  border: 1px solid var(--paper-rule);
+  padding: 12px 18px 14px;
+  background: rgba(239, 232, 213, 0.96);
+  border-top: 2px solid var(--verdigris);
+  border-bottom: 1px solid var(--paper-rule);
   pointer-events: none;
-  max-width: 260px;
+  max-width: 280px;
   text-align: right;
 }
 .map-stage .cartouche .eyebrow {
-  font-family: var(--ui);
-  font-weight: 700;
+  font-family: var(--mono);
+  font-weight: 500;
   font-size: 9px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--rust);
+  color: var(--madder);
   display: block;
-  margin-bottom: 2px;
+  margin-bottom: 6px;
 }
 .map-stage .cartouche .name {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
-  font-size: 17px;
-  line-height: 1.15;
-  color: var(--ivy);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink);
   display: block;
+  font-variation-settings: "opsz" 144, "SOFT" 100, "wght" 420;
 }
 .map-stage .cartouche .subname {
   display: block;
@@ -532,7 +567,8 @@ main.shell {
   font-size: 11px;
   font-style: italic;
   color: var(--ink-mute);
-  margin-top: 2px;
+  margin-top: 6px;
+  line-height: 1.35;
 }
 
 /* Compass rose — inked engraving in a corner. SVG inline for
@@ -544,7 +580,7 @@ main.shell {
   z-index: 400;
   width: 76px;
   height: 76px;
-  color: var(--ivy);
+  color: var(--verdigris);
   pointer-events: none;
   background: radial-gradient(circle at center, rgba(242, 236, 221, 0.92) 50%, rgba(242, 236, 221, 0) 75%);
   border-radius: 50%;
@@ -589,7 +625,7 @@ main.shell {
   background: rgba(244, 239, 230, 0.85) !important;
   color: var(--ink-mute) !important;
 }
-.leaflet-control-attribution a { color: var(--guardian-blue) !important; }
+.leaflet-control-attribution a { color: var(--link) !important; }
 .leaflet-control-zoom a {
   background: var(--paper) !important;
   color: var(--ink) !important;
@@ -611,12 +647,12 @@ main.shell {
   height: 40px;
   border-radius: 50%;
   background: rgba(242, 236, 221, 0.94);
-  border: 1.5px solid var(--ivy);
+  border: 1.5px solid var(--verdigris);
   box-shadow: 0 2px 6px rgba(20, 19, 17, 0.2);
   font-family: var(--ui);
   font-weight: 700;
   font-size: 13px;
-  color: var(--ivy-deep);
+  color: var(--verdigris-deep);
   transition: transform 140ms;
 }
 .cluster:hover { transform: scale(1.06); }
@@ -624,14 +660,14 @@ main.shell {
   width: 46px;
   height: 46px;
   font-size: 14px;
-  border-color: var(--ivy-deep);
+  border-color: var(--verdigris-deep);
   border-width: 2px;
 }
 .cluster.cluster-lg {
   width: 54px;
   height: 54px;
   font-size: 15px;
-  border-color: var(--rust);
+  border-color: var(--madder);
   border-width: 2px;
   background: rgba(236, 224, 199, 0.96);
 }
@@ -664,20 +700,20 @@ main.shell {
 .chmark.status-demolished { background: var(--status-demolished); }
 .chmark.is-active {
   transform: scale(1.35);
-  box-shadow: 0 0 0 2px var(--ivy), 0 0 0 4px var(--paper), 0 4px 10px rgba(20,19,17,0.35);
+  box-shadow: 0 0 0 2px var(--verdigris), 0 0 0 4px var(--paper), 0 4px 10px rgba(20,19,17,0.35);
 }
 .chmark-me {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--guardian-blue);
+  background: var(--link);
   border: 3px solid var(--paper);
-  box-shadow: 0 0 0 1.5px var(--guardian-blue), 0 0 14px rgba(5, 41, 98, 0.45);
+  box-shadow: 0 0 0 1.5px var(--link), 0 0 14px rgba(5, 41, 98, 0.45);
   animation: mePulse 2.4s ease-in-out infinite;
 }
 @keyframes mePulse {
-  0%, 100% { box-shadow: 0 0 0 1.5px var(--guardian-blue), 0 0 8px rgba(5, 41, 98, 0.45); }
-  50% { box-shadow: 0 0 0 1.5px var(--guardian-blue), 0 0 18px rgba(5, 41, 98, 0.7); }
+  0%, 100% { box-shadow: 0 0 0 1.5px var(--link), 0 0 8px rgba(5, 41, 98, 0.45); }
+  50% { box-shadow: 0 0 0 1.5px var(--link), 0 0 18px rgba(5, 41, 98, 0.7); }
 }
 
 .stage .hint {
@@ -748,7 +784,7 @@ main.shell {
   align-items: baseline;
 }
 .reading-panel .result:last-child { border-bottom: none; }
-.reading-panel .result:hover .result-name { color: var(--guardian-blue); }
+.reading-panel .result:hover .result-name { color: var(--link); }
 .reading-panel .result .dot {
   display: inline-block;
   width: 10px;
@@ -890,17 +926,18 @@ main.shell {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--rust);
+  color: var(--madder);
   margin: 0 0 12px;
 }
 .detail .long h2 {
   font-family: var(--display);
-  font-weight: 700;
-  font-size: clamp(32px, 4vw, 46px);
-  line-height: 1.05;
-  letter-spacing: -0.015em;
+  font-weight: 500;
+  font-size: clamp(40px, 5.6vw, 68px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
   color: var(--ink);
-  margin: 0 0 10px;
+  margin: 0 0 12px;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 500;
 }
 .detail .long .place-line {
   font-family: var(--body);
@@ -954,17 +991,18 @@ main.shell {
   max-width: 62ch;
   margin: 0 0 28px;
 }
-/* Drop cap on the first summary paragraph — the memorial-inscription
-   touch. Set in Guardian Headline at a large size, coloured ivy to pull
-   the topic palette into the body copy. */
+/* Drop cap — the anchor of the broadsheet voice. Fraunces at a very
+   carved optical size, verdigris ink, four lines tall. Subtle tuck
+   to align with body baseline. */
 .detail .long .summary::first-letter {
   font-family: var(--display);
-  font-weight: 700;
-  font-size: 4.2em;
-  line-height: 0.9;
+  font-weight: 400;
+  font-size: 4.6em;
+  line-height: 0.82;
   float: left;
-  margin: 6px 10px 0 0;
-  color: var(--ivy);
+  margin: 10px 12px -4px 0;
+  color: var(--verdigris);
+  font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 450;
 }
 
 /* ----- Editorial panels within the detail body ----- */
@@ -1003,15 +1041,21 @@ main.shell {
   margin: 0 0 14px;
   max-width: 62ch;
 }
+/* Pull-quote from the list entry — distinct from a voices blockquote:
+   this is the heritage authority speaking, so it reads as plate-
+   mounted text rather than a spoken quotation. */
 .detail .pull {
   font-family: var(--display);
-  font-weight: 500;
-  font-size: 22px;
+  font-weight: 400;
+  font-size: clamp(21px, 2.2vw, 25px);
   line-height: 1.3;
   color: var(--ink);
-  padding: 2px 0 6px 20px;
-  border-left: 3px solid var(--ivy-soft);
+  padding: 16px 20px 18px;
   margin: 0 0 22px;
+  background: var(--bone);
+  border-top: 1px solid var(--verdigris);
+  border-bottom: 1px solid var(--verdigris);
+  font-variation-settings: "opsz" 72, "SOFT" 40, "wght" 400;
 }
 .detail .pull cite {
   display: block;
@@ -1055,7 +1099,7 @@ main.shell {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--ivy-soft);
+  background: var(--verdigris-soft);
   border: 2px solid var(--paper);
 }
 .detail .timeline .when {
@@ -1090,30 +1134,46 @@ main.shell {
   content: '§ ';
   font-family: var(--display);
   font-style: italic;
-  color: var(--ivy-soft);
+  color: var(--verdigris-soft);
   margin-right: 4px;
 }
 
+/* Hanging quote — the whole block pulls left of the column into the
+   article's left margin, so the first quotation mark lands in the
+   gutter. The left border disappears; a printed "¶" mark in the
+   margin does the same job with more character. */
 .detail blockquote {
-  margin: 0 0 22px;
-  padding: 4px 0 4px 20px;
-  border-left: 3px solid var(--ivy);
+  position: relative;
+  margin: 32px 0 28px -32px;
+  padding-left: 32px;
   font-family: var(--display);
-  font-weight: 500;
-  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(22px, 2.4vw, 28px);
   line-height: 1.3;
   color: var(--ink);
-  font-style: italic;
   max-width: 36em;
+  font-variation-settings: "opsz" 72, "SOFT" 100, "wght" 400;
+}
+.detail blockquote::before {
+  content: '“';
+  position: absolute;
+  left: -6px;
+  top: -0.2em;
+  font-family: var(--display);
+  font-size: 3em;
+  line-height: 1;
+  color: var(--verdigris);
+  font-variation-settings: "opsz" 144, "SOFT" 100, "wght" 400;
 }
 .detail blockquote cite {
   display: block;
-  margin-top: 10px;
-  font-family: var(--ui);
+  margin-top: 12px;
+  font-family: var(--mono);
   font-style: normal;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-mute);
 }
@@ -1203,7 +1263,7 @@ main.shell {
   display: block;
   padding: 16px 18px;
   background: var(--paper-deep);
-  border-left: 3px solid var(--guardian-blue);
+  border-left: 3px solid var(--link);
   color: var(--ink);
   text-decoration: none;
   transition: background 140ms;
@@ -1214,7 +1274,7 @@ main.shell {
   font: 700 10px/1 var(--ui);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--rust);
+  color: var(--madder);
   display: block;
   margin-bottom: 8px;
 }
@@ -1290,7 +1350,7 @@ main.shell {
   font: 700 10px/1 var(--ui);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--guardian-yellow);
+  color: var(--bone);
   margin: 0 0 8px;
 }
 .detail .sidecar .submit-card h3 {
@@ -1314,7 +1374,7 @@ main.shell {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 11px 16px;
-  background: var(--guardian-yellow);
+  background: var(--bone);
   color: var(--ink);
   border: none;
   cursor: pointer;
@@ -1333,9 +1393,9 @@ main.shell {
   color: var(--ink-mute);
 }
 .detail .sidecar .sources a {
-  color: var(--guardian-blue);
+  color: var(--link);
   text-decoration: none;
-  border-bottom: 1px dotted var(--guardian-blue);
+  border-bottom: 1px dotted var(--link);
 }
 .detail .sidecar .sources a:hover { border-bottom-style: solid; }
 .detail .sidecar .sources .nolink {
@@ -1388,7 +1448,7 @@ main.shell {
   font: 700 10px/1 var(--ui);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--rust);
+  color: var(--madder);
   margin: 0 0 10px;
 }
 .submit-modal .box h3 {
@@ -1428,7 +1488,7 @@ main.shell {
 .submit-modal textarea:focus,
 .submit-modal input:focus {
   outline: none;
-  border-color: var(--guardian-blue);
+  border-color: var(--link);
 }
 .submit-modal .small {
   font: italic 12px/1.45 var(--body);
@@ -1440,7 +1500,7 @@ main.shell {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 13px 20px;
-  background: var(--guardian-blue);
+  background: var(--link);
   color: var(--paper);
   border: none;
   cursor: pointer;
@@ -1450,7 +1510,7 @@ main.shell {
 .submit-modal .sent {
   font-family: var(--body);
   font-size: 15px;
-  color: var(--ivy);
+  color: var(--verdigris);
   margin: 16px 0 0;
 }
 
@@ -1464,9 +1524,9 @@ footer.foot {
   color: var(--ink-mute);
 }
 footer.foot a {
-  color: var(--guardian-blue);
+  color: var(--link);
   text-decoration: none;
-  border-bottom: 1px dotted var(--guardian-blue);
+  border-bottom: 1px dotted var(--link);
 }
 footer.foot a:hover { border-bottom-style: solid; }
 
