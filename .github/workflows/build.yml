@@ -55,6 +55,10 @@ jobs:
         working-directory: build
         run: python3 fetch_fofc.py
 
+      - name: Scrape Churches Conservation Trust gazetteer
+        working-directory: build
+        run: python3 fetch_cct.py
+
       - name: Fetch Historic England Heritage at Risk register
         working-directory: build
         run: python3 fetch_heritage_at_risk.py
@@ -62,6 +66,12 @@ jobs:
       - name: Enrich with postcodes.io geography
         working-directory: build
         run: python3 enrich_postcodes.py
+
+      - name: Attach Wikimedia Commons hero photographs
+        working-directory: build
+        # Commons is throttled + we hit ~1,000 queries — the script
+        # checkpoints so partial runs are still useful.
+        run: python3 fetch_commons.py
 
       - name: Build the merged register
         working-directory: build
