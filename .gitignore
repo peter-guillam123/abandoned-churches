@@ -6,6 +6,7 @@ __pycache__/
 
 # Claude Code local settings (contains user-specific permission allowlist)
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # Intermediate / raw ingestion outputs — rebuilt from sources via GitHub Action
 build/_raw/
