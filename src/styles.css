@@ -1,4 +1,4 @@
-/* Friendless — a register of the UK's derelict churches.
+/* Church and State — a register of the UK's derelict churches.
    Aesthetic direction: archival heritage broadsheet. Carved-serif
    display (Fraunces), literary body serif (Newsreader), mono micro-
    labels (IBM Plex Mono). Vellum paper, warm-black ink, verdigris as
@@ -916,34 +916,6 @@ main.shell {
 }
 .detail .hero figcaption a:hover { color: var(--ink); }
 
-.detail .hero-silhouette {
-  position: relative;
-  aspect-ratio: 2.4 / 1;
-  overflow: hidden;
-  background: var(--paper-deep);
-  border-top: 1px solid var(--paper-rule);
-  border-bottom: 1px solid var(--paper-rule);
-}
-.detail .hero-silhouette svg {
-  width: 40%;
-  height: 100%;
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-}
-.detail .hero-silhouette .hero-note {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--body);
-  font-style: italic;
-  font-size: 12px;
-  color: var(--ink-mute);
-  background: rgba(244, 239, 230, 0.85);
-  padding: 4px 10px;
-}
 .detail .long .kicker {
   font-family: var(--ui);
   font-weight: 700;

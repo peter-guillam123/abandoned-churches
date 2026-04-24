@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Friendless — a register of the UK's closed and at-risk churches",
+    "title": "Church and State — a register of the UK's closed and at-risk churches",
     "updated": "2026-04-23",
     "schemaVersion": 2,
     "note": "Schema v2 — nested by editorial panel. St Tyfrydog's is the strawman, fully sourced across every slot. Other buildings are partial; empty slots are honest nulls, not hidden gaps."

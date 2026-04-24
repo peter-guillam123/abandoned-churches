@@ -364,7 +364,7 @@ def main():
 
     out = {
         "meta": {
-            "title": "Friendless — a register of the UK's closed and at-risk churches",
+            "title": "Church and State — a register of the UK's closed and at-risk churches",
             "updated": date.today().isoformat(),
             "schemaVersion": 2,
             "note": (

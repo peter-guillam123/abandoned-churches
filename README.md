@@ -1,4 +1,4 @@
-# Friendless
+# Church and State
 
 A reader's companion to The Guardian's reporting series on the UK's derelict churches, chapels and meeting houses. Type a postcode; find the one at the end of your lane; read its story.
 

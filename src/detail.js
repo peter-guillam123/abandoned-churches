@@ -15,91 +15,32 @@ const STATUS_COLORS = {
   demolished: 'var(--status-demolished)',
 };
 
-// SVG fallback for when we haven't seeded real photography yet. Seeded
-// by building id so each sparse entry gets a consistent silhouette.
-function silhouetteSvg(building) {
-  const seed = [...building.id].reduce((a, c) => a + c.charCodeAt(0), 0);
-  const towerLean = (seed % 5) - 2;
-  const crossY = 6 + (seed % 3);
-  const ivy = (seed % 3) === 0;
-  return `
-    <svg viewBox="0 0 400 420" preserveAspectRatio="xMidYMax meet" role="img" aria-hidden="true">
-      <defs>
-        <pattern id="grainbg-${building.id}" width="2" height="2" patternUnits="userSpaceOnUse">
-          <rect width="2" height="2" fill="#E8DFD0"/>
-          <circle cx="1" cy="1" r="0.25" fill="#121212" opacity="0.08"/>
-        </pattern>
-      </defs>
-      <rect width="400" height="420" fill="url(#grainbg-${building.id})"/>
-      <path d="M0 330 Q 110 315 200 320 T 400 328 L 400 420 L 0 420 Z" fill="#D0C4AE" opacity="0.6"/>
-      <g opacity="0.55" fill="#5f5c55">
-        <ellipse cx="58" cy="300" rx="44" ry="56"/>
-        <ellipse cx="342" cy="305" rx="52" ry="62"/>
-      </g>
-      <path d="M 20 345 Q 200 320 380 345" fill="none" stroke="#3d3a35" stroke-width="3"/>
-      <rect x="130" y="220" width="200" height="110" fill="#B47D2C" opacity="0.9"/>
-      <polygon points="130,220 230,170 330,220" fill="#3d3a35"/>
-      <g transform="translate(110 150) rotate(${towerLean} 30 95)">
-        <rect x="0" y="0" width="60" height="180" fill="#B47D2C"/>
-        <rect x="0" y="0" width="60" height="180" fill="none" stroke="#3d3a35" stroke-width="2"/>
-        <rect x="22" y="35" width="16" height="32" fill="#3d3a35"/>
-        <rect x="22" y="92" width="16" height="26" fill="#3d3a35" opacity="0.75"/>
-        <path d="M -4 0 L 30 -34 L 64 0 Z" fill="#3d3a35"/>
-        <line x1="30" y1="-34" x2="30" y2="-${34 + crossY + 10}" stroke="#121212" stroke-width="2"/>
-        <line x1="${30 - 5}" y1="-${34 + crossY + 4}" x2="${30 + 5}" y2="-${34 + crossY + 4}" stroke="#121212" stroke-width="2"/>
-      </g>
-      <rect x="160" y="255" width="30" height="50" fill="#3d3a35" opacity="0.8"/>
-      <rect x="210" y="255" width="30" height="50" fill="#3d3a35" opacity="0.8"/>
-      <rect x="260" y="255" width="30" height="50" fill="#3d3a35" opacity="0.8"/>
-      <g fill="#3d3a35">
-        <rect x="75" y="330" width="6" height="14" rx="3"/>
-        <rect x="95" y="334" width="6" height="12" rx="3"/>
-        <rect x="300" y="330" width="6" height="15" rx="3"/>
-        <rect x="318" y="334" width="6" height="12" rx="3"/>
-      </g>
-      ${ivy ? `
-        <g fill="#22874d" opacity="0.55">
-          <path d="M130 330 Q 140 280 130 240 T 150 190 T 145 230"/>
-          <circle cx="140" cy="260" r="6"/>
-          <circle cx="135" cy="290" r="7"/>
-          <circle cx="145" cy="315" r="5"/>
-        </g>` : ''}
-    </svg>
-  `;
-}
 
 function heroSection(b) {
   const h = b.imagery?.hero;
-  if (h) {
-    // Don't repeat the source when credit already equals it (FoFC / CCT
-    // own their photography). Show author + source + licence separately
-    // when Commons or Geograph — those are where "Nigel Williams via
-    // Geograph, CC-BY-SA 2.0" is meaningful.
-    const creditEqualsSource = (h.credit || '').trim() === (h.source || '').trim();
-    const sourceLink = h.sourceUrl
-      ? `<a href="${h.sourceUrl}" target="_blank" rel="noopener">${h.source}</a>`
-      : h.source;
-    const licenceLink = h.licenceUrl
-      ? `<a href="${h.licenceUrl}" target="_blank" rel="noopener">${h.licence}</a>`
-      : h.licence;
-    const attribution = creditEqualsSource
-      ? `${sourceLink}${h.licence ? ` · ${licenceLink}` : ''}`
-      : `${h.credit} / ${sourceLink}${h.licence ? ` · ${licenceLink}` : ''}`;
-    return `
-      <figure class="hero">
-        <img src="${h.url}" alt="${h.caption || b.name}" loading="lazy" />
-        <figcaption>
-          <span class="caption">${h.caption || ''}</span>
-          <span class="credit">${attribution}</span>
-        </figcaption>
-      </figure>
-    `;
-  }
+  if (!h) return '';
+  // Don't repeat the source when credit already equals it (FoFC / CCT
+  // own their photography). Show author + source + licence separately
+  // when Commons or Geograph — those are where "Nigel Williams via
+  // Geograph, CC-BY-SA 2.0" is meaningful.
+  const creditEqualsSource = (h.credit || '').trim() === (h.source || '').trim();
+  const sourceLink = h.sourceUrl
+    ? `<a href="${h.sourceUrl}" target="_blank" rel="noopener">${h.source}</a>`
+    : h.source;
+  const licenceLink = h.licenceUrl
+    ? `<a href="${h.licenceUrl}" target="_blank" rel="noopener">${h.licence}</a>`
+    : h.licence;
+  const attribution = creditEqualsSource
+    ? `${sourceLink}${h.licence ? ` · ${licenceLink}` : ''}`
+    : `${h.credit} / ${sourceLink}${h.licence ? ` · ${licenceLink}` : ''}`;
   return `
-    <div class="hero hero-silhouette">
-      ${silhouetteSvg(b)}
-      <span class="hero-note">Photograph to come — the register currently carries a decorative plate for this entry.</span>
-    </div>
+    <figure class="hero">
+      <img src="${h.url}" alt="${h.caption || b.name}" loading="lazy" />
+      <figcaption>
+        <span class="caption">${h.caption || ''}</span>
+        <span class="credit">${attribution}</span>
+      </figcaption>
+    </figure>
   `;
 }
 
