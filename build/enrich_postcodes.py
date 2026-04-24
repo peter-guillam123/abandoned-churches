@@ -85,6 +85,10 @@ def _har_id(r: dict) -> str:
     return f"har-{slugify(name)}-{key}"
 
 
+def _cct_id(r: dict) -> str:
+    return f"cct-{slugify(r.get('name') or '')}-{slugify(r.get('settlement') or '')}".strip("-")
+
+
 def forward_lookup(records: list[tuple[str, str]]) -> dict[str, dict]:
     """Look up a list of (id, postcode) pairs via the single-postcode API."""
     out: dict[str, dict] = {}
@@ -146,8 +150,13 @@ def reverse_lookup(records: list[tuple[str, float, float]]) -> dict[str, dict]:
 
 def main():
     # Gather raw records we need to enrich
-    fofc_records = json.loads((RAW / "fofc.json").read_text(encoding="utf-8")) if (RAW / "fofc.json").exists() else []
-    har_records = json.loads((RAW / "heritage_at_risk.json").read_text(encoding="utf-8")) if (RAW / "heritage_at_risk.json").exists() else []
+    def load(name):
+        p = RAW / f"{name}.json"
+        return json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
+
+    fofc_records = load("fofc")
+    cct_records = load("cct")
+    har_records = load("heritage_at_risk")
 
     # FoFC — have postcodes, need forward lookup
     forward_pairs = []
@@ -159,13 +168,17 @@ def main():
     print(f"Forward (postcode → geography): {len(forward_pairs)} FoFC records")
     forward_out = forward_lookup(forward_pairs)
 
-    # HAR — have coords, need reverse lookup
+    # CCT + HAR — have coords, need reverse lookup
     reverse_triples = []
+    for r in cct_records:
+        if r.get("lat") is None or r.get("lon") is None:
+            continue
+        reverse_triples.append((_cct_id(r), r["lat"], r["lon"]))
     for r in har_records:
         if r.get("lat") is None or r.get("lon") is None:
             continue
         reverse_triples.append((_har_id(r), r["lat"], r["lon"]))
-    print(f"\nReverse (lat/lon → geography): {len(reverse_triples)} HAR records")
+    print(f"\nReverse (lat/lon → geography): {len(reverse_triples)} records (CCT + HAR)")
     reverse_out = reverse_lookup(reverse_triples)
 
     merged = {**forward_out, **reverse_out}

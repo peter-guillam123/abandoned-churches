@@ -48,6 +48,20 @@ def load_enrichment() -> dict[str, dict]:
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+def load_commons_photos() -> dict[str, dict]:
+    p = RAW / "_commons.json"
+    if not p.exists():
+        return {}
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def load_geograph_photos() -> dict[str, dict]:
+    p = RAW / "_geograph.json"
+    if not p.exists():
+        return {}
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
 # ---------- Normalisers ----------
 
 def _split_place(raw: str | None) -> tuple[str | None, str | None]:
@@ -116,6 +130,56 @@ def from_fofc(r: dict) -> dict:
         # follow-up pass if needed.
         "lat": None,
         "lon": None,
+    }
+
+
+def from_cct(r: dict) -> dict:
+    """Churches Conservation Trust entries — preserved, CofE redundant,
+    with a CCT-owned hero photograph."""
+    return {
+        "id": r["id"],
+        "name": r.get("name"),
+        "dedicatedTo": None,
+        "denomination": {"current": "Church of England (redundant, in CCT care)", "historical": []},
+        "place": {
+            "settlement": r.get("settlement"),
+            "region": r.get("region"),
+            "parish": None,
+            "council": None,
+            "ward": None,
+            "constituency": None,
+            "nation": r.get("nation") or "England",
+            "setting": None,
+        },
+        "lat": r.get("lat"),
+        "lon": r.get("lon"),
+        "listing": {
+            "grade": None,
+            "listedOn": None,
+            "body": "Historic England",
+            "reason": None,
+            "associated": [],
+        },
+        "fabric": {"firstWorship": None, "phases": [], "materials": None, "plan": None, "style": None},
+        "interior": {"features": []},
+        "status": "preserved",
+        "statusHistory": [],
+        "custodian": {"body": "Churches Conservation Trust", "since": None, "previously": "Church of England"},
+        "lastService": None,
+        "condition": {"summary": None, "plannedWorks": [], "worksTimeline": None, "estimatedCost": None},
+        "context": {"lsoa": None, "msoa": None, "ruralUrban": None, "ruralUrbanPrior": None,
+                    "travelToWorkArea": None, "nationalPark": None,
+                    "deprivationDecile": None, "deprivationSource": None},
+        "use": {"servicesStatus": "Open by arrangement / events", "lateCongregationSize": None, "openingHours": None},
+        "people": [],
+        "quotes": [],
+        "coverage": {"guardian": []},
+        "imagery": {"hero": r.get("hero"), "gallery": []},
+        "sources": [
+            {"label": "Churches Conservation Trust", "url": r.get("sourceUrl")},
+        ],
+        "summary": r.get("summary"),
+        "provenance": f"Scraped from the Churches Conservation Trust gazetteer ({r.get('sourceUrl')}); schema v2.",
     }
 
 
@@ -215,26 +279,40 @@ def apply_enrichment(building: dict, enrichment: dict) -> dict:
     return building
 
 
+def _name_tokens(name: str) -> set[str]:
+    """Strip down to the signal-bearing tokens for loose matching."""
+    name = (name or "").lower()
+    # Drop punctuation and common noise tokens (St, The, Church etc.)
+    tokens = re.findall(r"[a-z0-9]+", name)
+    drop = {"st", "the", "of", "a", "and", "church", "chapel", "old", "saint"}
+    return {t for t in tokens if t not in drop and len(t) > 2}
+
+
 def dedupe(all_records: list[dict]) -> list[dict]:
-    """Prefer hand-curated, then FoFC, then HAR. Keyed by name + coords to
-    within ~500m."""
+    """Prefer hand-curated > FoFC > CCT > HAR. Match on coord proximity
+    + at least one shared distinctive token (dedicated saint / village
+    name). Handles the common case where HAR calls it "Church of
+    St Nicholas, London Road" and CCT has it as "St Nicholas, Blakeney"
+    — same coordinates, clear token overlap."""
     kept: list[dict] = []
     seen_ids: set[str] = set()
     for r in all_records:
         if r["id"] in seen_ids:
             continue
-        # Fuzzy dedupe by name+lat+lon
         dup = False
+        rtokens = _name_tokens(r.get("name") or "")
         for k in kept:
             if not r.get("lat") or not k.get("lat"):
                 continue
-            if (
-                r["name"]
-                and k["name"]
-                and r["name"].lower() == k["name"].lower()
-                and abs(r["lat"] - k["lat"]) < 0.005
-                and abs(r["lon"] - k["lon"]) < 0.005
-            ):
+            if abs(r["lat"] - k["lat"]) >= 0.0025 or abs(r["lon"] - k["lon"]) >= 0.0025:
+                # Not within ~250m — can't be the same building.
+                continue
+            ktokens = _name_tokens(k.get("name") or "")
+            # Either the names match loosely, or they share a meaningful
+            # token (saint name, village), or they're at the exact same
+            # address (within ~30m).
+            close = abs(r["lat"] - k["lat"]) < 0.0003 and abs(r["lon"] - k["lon"]) < 0.0003
+            if close or (rtokens & ktokens):
                 dup = True
                 break
         if dup:
@@ -244,20 +322,39 @@ def dedupe(all_records: list[dict]) -> list[dict]:
     return kept
 
 
+def apply_commons_photo(building: dict, photos: dict) -> dict:
+    """Attach a Commons-/Geograph-sourced hero if the building doesn't
+    already have one. Skip entries whose only field is an
+    `enrichmentStatus` marker (attempted, no photo found)."""
+    if building.get("imagery", {}).get("hero"):
+        return building
+    hero = photos.get(building["id"])
+    if not hero or "url" not in hero:
+        return building
+    building.setdefault("imagery", {"hero": None, "gallery": []})
+    building["imagery"]["hero"] = hero
+    return building
+
+
 def main():
     hand = load_hand()
     fofc = [from_fofc(r) for r in load_raw("fofc")]
+    cct = [from_cct(r) for r in load_raw("cct")]
     har = [from_har(r) for r in load_raw("heritage_at_risk")]
     enrichment = load_enrichment()
+    commons = load_commons_photos()
+    geograph = load_geograph_photos()
 
-    # Order matters for dedupe — first-seen wins.
-    combined = list(hand) + fofc + har
-    # Enrichment runs BEFORE dedupe so FoFC records get their lat/lon,
-    # which dedupe uses to match against HAR by coordinate proximity.
+    # Order matters for dedupe — first-seen wins. Hand-curated hero
+    # records come first, then curated charity sets (FoFC and CCT both
+    # have rich fields), then the broad Heritage at Risk list.
+    combined = list(hand) + fofc + cct + har
     combined = [apply_enrichment(b, enrichment) for b in combined]
     combined = dedupe(combined)
-    # Drop records we still can't place on the map — no coords after
-    # enrichment means they're not useful to a reader typing a postcode.
+    # Photo order: Commons first (free, well-covered), Geograph fills
+    # whatever Commons missed. Both only apply when imagery.hero is null.
+    combined = [apply_commons_photo(b, commons) for b in combined]
+    combined = [apply_commons_photo(b, geograph) for b in combined]
     combined = [b for b in combined if b.get("lat") is not None and b.get("lon") is not None]
 
     # Count statuses

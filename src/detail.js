@@ -71,12 +71,26 @@ function silhouetteSvg(building) {
 function heroSection(b) {
   const h = b.imagery?.hero;
   if (h) {
+    // Don't repeat the source when credit already equals it (FoFC / CCT
+    // own their photography). Show author + source + licence separately
+    // when Commons or Geograph — those are where "Nigel Williams via
+    // Geograph, CC-BY-SA 2.0" is meaningful.
+    const creditEqualsSource = (h.credit || '').trim() === (h.source || '').trim();
+    const sourceLink = h.sourceUrl
+      ? `<a href="${h.sourceUrl}" target="_blank" rel="noopener">${h.source}</a>`
+      : h.source;
+    const licenceLink = h.licenceUrl
+      ? `<a href="${h.licenceUrl}" target="_blank" rel="noopener">${h.licence}</a>`
+      : h.licence;
+    const attribution = creditEqualsSource
+      ? `${sourceLink}${h.licence ? ` · ${licenceLink}` : ''}`
+      : `${h.credit} / ${sourceLink}${h.licence ? ` · ${licenceLink}` : ''}`;
     return `
       <figure class="hero">
         <img src="${h.url}" alt="${h.caption || b.name}" loading="lazy" />
         <figcaption>
           <span class="caption">${h.caption || ''}</span>
-          <span class="credit">${h.credit} / <a href="${h.sourceUrl}" target="_blank" rel="noopener">${h.source}</a> · <a href="${h.licenceUrl || '#'}" target="_blank" rel="noopener">${h.licence}</a></span>
+          <span class="credit">${attribution}</span>
         </figcaption>
       </figure>
     `;

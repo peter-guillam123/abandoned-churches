@@ -34,15 +34,21 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # Each source script writes raw JSON to build/_raw/
-python3 fetch_fofc.py
-python3 fetch_cct.py
-python3 fetch_heritage_at_risk.py
-python3 fetch_geograph.py          # needs a free Geograph API key in .env
+python3 fetch_fofc.py                # 72 rescued/preserved (Friends of Friendless Churches)
+python3 fetch_cct.py                 # 356 preserved (Churches Conservation Trust)
+python3 fetch_heritage_at_risk.py    # 969 at-risk (Historic England, 2024 register)
 
-# Merge into the register
-python3 enrich_postcodes.py         # calls postcodes.io per building
-python3 build_register.py           # writes data/buildings.json
+# Enrich
+python3 enrich_postcodes.py          # postcodes.io: LSOA / parish / ward / RUC / TTWA
+python3 fetch_commons.py             # Wikimedia Commons hero photos (no key needed)
+python3 fetch_geograph.py            # optional — needs GEOGRAPH_API_KEY in env
+
+# Merge
+python3 build_register.py            # writes data/buildings.json
 ```
+
+`fetch_commons.py` and `enrich_postcodes.py` both checkpoint to
+`build/_raw/` so a killed run can resume without repeating work.
 
 ## Files
 

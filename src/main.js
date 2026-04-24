@@ -237,7 +237,10 @@ function wireSubmit() {
 async function boot() {
   const { buildings, meta } = await loadBuildings();
   state.buildings = buildings;
-  if (meta?.updated) el.statSub.textContent = `prototype · updated ${meta.updated}`;
+  if (meta?.updated) {
+    el.statSub.textContent = `prototype · updated ${meta.updated}`;
+    el.headMeta.textContent = `Register · updated ${meta.updated}`;
+  }
   refreshLegendCounts();
 
   // Wait for Leaflet core AND the markercluster plugin to be ready. Both

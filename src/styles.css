@@ -660,16 +660,40 @@ main.shell {
   width: 46px;
   height: 46px;
   font-size: 14px;
-  border-color: var(--verdigris-deep);
   border-width: 2px;
 }
 .cluster.cluster-lg {
   width: 54px;
   height: 54px;
   font-size: 15px;
-  border-color: var(--madder);
   border-width: 2px;
   background: rgba(236, 224, 199, 0.96);
+}
+
+/* Cluster tint by dominant status — the map shows where risk and
+   renewal concentrate without reading the legend. */
+.cluster.tone-at-risk {
+  border-color: var(--madder);
+  color: var(--madder);
+  background: rgba(246, 232, 221, 0.95);
+}
+.cluster.tone-rescued,
+.cluster.tone-preserved {
+  border-color: var(--verdigris);
+  color: var(--verdigris-deep);
+}
+.cluster.tone-repurposed {
+  border-color: var(--madder-soft);
+  color: var(--madder);
+}
+.cluster.tone-closed,
+.cluster.tone-demolished {
+  border-color: var(--ink-mute);
+  color: var(--ink-mute);
+}
+.cluster.tone-mixed {
+  border-color: var(--ink-soft);
+  color: var(--ink-soft);
 }
 .leaflet-cluster-anim .cluster {
   transition: transform 200ms ease-out;

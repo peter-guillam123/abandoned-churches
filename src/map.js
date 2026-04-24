@@ -24,19 +24,34 @@ export function initMap(elId) {
     maxZoom: 19,
   }).addTo(map);
 
-  // Cluster group sits above the tile layer. Cluster icons take their
-  // styling from CSS (see styles.css: .marker-cluster-*) so they feel
-  // like the rest of the register rather than Leaflet's default blue.
+  // Cluster group sits above the tile layer. Each cluster is coloured
+  // by the dominant status of its children — a cluster mostly at-risk
+  // tints madder, mostly preserved tints verdigris, so the map shows
+  // where risk concentrates at a glance without the reader needing to
+  // zoom and count.
   cluster = L.markerClusterGroup({
     maxClusterRadius: 50,
     spiderfyOnMaxZoom: true,
     showCoverageOnHover: false,
     disableClusteringAtZoom: 13,
     iconCreateFunction: (c) => {
-      const n = c.getChildCount();
+      const children = c.getAllChildMarkers();
+      const n = children.length;
       const size = n < 10 ? 'sm' : n < 100 ? 'md' : 'lg';
+      // Tally statuses; the winner colours the cluster.
+      const counts = Object.create(null);
+      for (const m of children) {
+        const s = m.options.__status || 'unknown';
+        counts[s] = (counts[s] || 0) + 1;
+      }
+      let top = 'mixed', max = 0;
+      for (const [s, v] of Object.entries(counts)) {
+        if (v > max) { max = v; top = s; }
+      }
+      // A mild "mixed" signal when no single status is > 60% of the group
+      const tone = max / n >= 0.6 ? top : 'mixed';
       return L.divIcon({
-        html: `<div class="cluster cluster-${size}"><span>${n}</span></div>`,
+        html: `<div class="cluster cluster-${size} tone-${tone}"><span>${n}</span></div>`,
         className: '',
         iconSize: [40, 40],
       });
@@ -63,7 +78,9 @@ export function addBuildings(buildings) {
   const layers = [];
   buildings.forEach((b) => {
     const { icon } = markerIcon(b.status);
-    const marker = L.marker([b.lat, b.lon], { icon, title: b.name });
+    // Stash the status on the marker so the cluster icon generator
+    // can tint by majority without us keeping a side table.
+    const marker = L.marker([b.lat, b.lon], { icon, title: b.name, __status: b.status });
     marker.on('click', () => onMarkerClick(b));
     markers.set(b.id, { marker, building: b });
     layers.push(marker);
