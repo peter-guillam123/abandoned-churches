@@ -418,32 +418,44 @@ main.shell {
   border-radius: 50%;
 }
 
-.finder .status-legend {
-  margin-top: 28px;
-  padding-top: 16px;
+/* Filter blocks — status + denomination. Each is a list of chips that
+   click TO filter. A selected chip carries .chip-on; tapping it again
+   clears the filter. Default state has no chip selected = all visible. */
+.finder .filter-block {
+  margin-top: 24px;
+  padding-top: 14px;
   border-top: 1px solid var(--paper-rule);
 }
-.finder .status-legend ul {
+.finder .chip-list {
   list-style: none;
   padding: 0;
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
-.finder .status-legend li {
-  font: 400 13px/1.4 var(--body);
+.finder .chip-list li {
+  font: 400 13px/1.35 var(--body);
   color: var(--ink-soft);
   display: flex;
   align-items: baseline;
   gap: 10px;
   cursor: pointer;
-  padding: 2px 0;
+  padding: 5px 8px 5px 9px;
   user-select: none;
+  border-left: 2px solid transparent;
+  transition: background 120ms, color 120ms, border-color 120ms;
+  outline-offset: -2px;
 }
-.finder .status-legend li:hover { color: var(--ink); }
-.finder .status-legend li.muted { opacity: 0.3; }
-.finder .status-legend .dot {
+.finder .chip-list li:hover { color: var(--ink); background: var(--bone); }
+.finder .chip-list li.chip-on {
+  background: var(--bone);
+  border-left-color: var(--verdigris);
+  color: var(--ink);
+}
+.finder .chip-list li.chip-on .count,
+.finder .chip-list li.chip-on .dcount { color: var(--verdigris-deep); }
+.finder .chip-list .dot {
   display: inline-block;
   width: 10px;
   height: 10px;
@@ -451,11 +463,23 @@ main.shell {
   flex-shrink: 0;
   transform: translateY(1px);
 }
-.finder .status-legend .count {
+.finder .chip-list .count,
+.finder .chip-list .dcount {
   margin-left: auto;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.finder .chip-list--denom li {
+  /* Denomination labels are wider than statuses; let them wrap. */
+  align-items: flex-start;
+}
+.finder .chip-list--denom .dlabel {
+  flex: 1;
+  font-size: 12.5px;
+  line-height: 1.35;
 }
 
 .finder .tips {

@@ -22,7 +22,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from _util import RateLimiter, get, slugify, write_raw
+from _util import RateLimiter, get, slugify, write_raw, infer_denomination
 
 INDEX_URL = "https://friendsoffriendlesschurches.org.uk/find-churches/"
 BASE = "https://friendsoffriendlesschurches.org.uk"
@@ -178,6 +178,12 @@ def extract_detail(url: str, html: str) -> dict:
     # Listing grade — FoFC pages don't consistently print it anymore; we
     # leave it null here and let downstream enrichment fill it from
     # Historic England / Cadw if we ever wire that join.
+    denom, denom_conf = infer_denomination(
+        name=titleparts.get("name"),
+        body=about,
+        summary=summary,
+        nation=nation,
+    )
     return {
         "id": f"fofc-{slugify(titleparts.get('name') or url)}-{slugify(titleparts.get('settlement') or '')}".strip("-"),
         "source": "fofc",
@@ -195,6 +201,8 @@ def extract_detail(url: str, html: str) -> dict:
         "body": about,
         "hero": hero,
         "custodian": "Friends of Friendless Churches",
+        "denomination": denom,
+        "denominationConfidence": denom_conf,
         # Status classification:
         # - "Closed for repairs" / "Closed" → rescued (we're about to open)
         # - "Open regularly" / "Open by appointment" → preserved

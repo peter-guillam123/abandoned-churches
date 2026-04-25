@@ -22,7 +22,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-from _util import RAW, slugify
+from _util import RAW, slugify, infer_denomination, canonicalise_denomination
 
 REPO = Path(__file__).parent.parent
 DATA = REPO / "data"
@@ -84,8 +84,12 @@ def from_fofc(r: dict) -> dict:
         "id": r["id"],
         "name": (r.get("name") or "").split(",")[0].strip() or None,
         "dedicatedTo": None,
+        # Denomination is the *historical* tradition the building was
+        # built for, not the current custodian. FoFC vesting doesn't
+        # change that. Custodian sits separately.
         "denomination": {
-            "current": "Friends of Friendless Churches (redundant)",
+            "current": r.get("denomination"),
+            "confidence": r.get("denominationConfidence"),
             "historical": [],
         },
         "place": {
@@ -140,7 +144,11 @@ def from_cct(r: dict) -> dict:
         "id": r["id"],
         "name": r.get("name"),
         "dedicatedTo": None,
-        "denomination": {"current": "Church of England (redundant, in CCT care)", "historical": []},
+        "denomination": {
+            "current": "Church of England",
+            "confidence": "high",
+            "historical": [],
+        },
         "place": {
             "settlement": r.get("settlement"),
             "region": r.get("region"),
@@ -201,7 +209,11 @@ def from_har(r: dict) -> dict:
         "id": f"har-{slugify(name)}-{r.get('list_entry') or r.get('har_id')}",
         "name": name,
         "dedicatedTo": None,
-        "denomination": {"current": None, "historical": []},
+        "denomination": {
+            "current": r.get("denomination"),
+            "confidence": r.get("denominationConfidence"),
+            "historical": [],
+        },
         "place": {
             "settlement": None,
             "region": None,
@@ -356,6 +368,17 @@ def main():
     combined = [apply_commons_photo(b, commons) for b in combined]
     combined = [apply_commons_photo(b, geograph) for b in combined]
     combined = [b for b in combined if b.get("lat") is not None and b.get("lon") is not None]
+
+    # Canonicalise the denomination string on every record so the
+    # frontend's filter-chip menu doesn't end up with near-duplicate
+    # variants ("Church of England (Diocese of York)" → "Church of
+    # England", "Roman Catholic Church" → "Roman Catholic", etc.).
+    for b in combined:
+        d = b.get("denomination") or {}
+        canon = canonicalise_denomination(d.get("current"))
+        if canon != d.get("current"):
+            d["current"] = canon
+            b["denomination"] = d
 
     # Count statuses
     counts: dict[str, int] = {}

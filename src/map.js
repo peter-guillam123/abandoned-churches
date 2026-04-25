@@ -103,18 +103,25 @@ export function highlight(id) {
 
 // Show only the markers whose status is in `visibleStatuses`. With
 // clustering we add/remove from the cluster group rather than the map
-// itself so the cluster counts update as the filter changes.
-export function filterByStatus(visibleStatuses) {
+// itself so the cluster counts update as the filter changes. The
+// predicate receives a building record and returns true to show it.
+export function applyFilters(predicate) {
   const toAdd = [];
   const toRemove = [];
   markers.forEach((m) => {
-    const shouldShow = visibleStatuses.has(m.building.status);
+    const shouldShow = predicate ? predicate(m.building) : true;
     const isOnCluster = cluster.hasLayer(m.marker);
     if (shouldShow && !isOnCluster) toAdd.push(m.marker);
     else if (!shouldShow && isOnCluster) toRemove.push(m.marker);
   });
   if (toRemove.length) cluster.removeLayers(toRemove);
   if (toAdd.length) cluster.addLayers(toAdd);
+}
+
+// Back-compat shim: code that was filtering by a Set of statuses is
+// kept working until callers migrate.
+export function filterByStatus(visibleStatuses) {
+  applyFilters((b) => visibleStatuses.has(b.status));
 }
 
 export function flyToBuilding(id, zoom = 14) {

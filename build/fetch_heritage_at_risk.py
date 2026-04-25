@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 import math
 
-from _util import get_json, write_raw
+from _util import get_json, write_raw, infer_denomination
 
 HAR_ITEM = "3866e4532c5146ceb8ba23679bf8fc31"
 HAR_URL = (
@@ -63,16 +63,24 @@ def feature_centroid_wgs84(feat: dict) -> tuple[float, float] | tuple[None, None
 def normalise(feat: dict) -> dict:
     props = feat.get("properties", {}) or {}
     lat, lon = feature_centroid_wgs84(feat)
+    name = props.get("EntryName")
+    # All HAR records sit in England, so the inference can default
+    # to Church of England for the "St X's" pattern.
+    denom, denom_conf = infer_denomination(
+        name=name, body=None, summary=None, nation="England",
+    )
     return {
         "source": "heritage-at-risk",
         "har_id": props.get("uid") or props.get("FID"),
         "list_entry": props.get("List_Entry"),
-        "name": props.get("EntryName"),
+        "name": name,
         "heritage_category": props.get("HeritageCa"),
         "risk_category": props.get("Risk_Metho"),
         "url": props.get("URL"),
         "lat": lat,
         "lon": lon,
+        "denomination": denom,
+        "denominationConfidence": denom_conf,
         "_props": props,
     }
 

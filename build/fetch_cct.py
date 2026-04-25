@@ -101,8 +101,11 @@ def normalise(entry: dict) -> dict:
         "summary": entry.get("listing_summary") or None,
         "hero": hero,
         "custodian": "Churches Conservation Trust",
-        # All CCT buildings are held long-term by the charity — classify
-        # as preserved.
+        # All CCT buildings are former CofE parish churches in England,
+        # vested in the trust as redundant. Denomination is unambiguous.
+        "denomination": "Church of England",
+        "denominationConfidence": "high",
+        # Held long-term by the charity — classify as preserved.
         "status": "preserved",
     }
 

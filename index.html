@@ -39,11 +39,11 @@
   <main class="shell">
     <!-- LEFT: finder sidebar -->
     <aside class="finder">
-      <p class="kicker">Start here</p>
-      <p class="intro">Type a postcode or a place — <em>Anglesey</em>, <em>Stoke Newington</em>, <em>Hull</em> — and we'll surface the closed, at-risk or rescued churches nearest you.</p>
+      <p class="kicker">Search the register</p>
+      <p class="intro">Type a postcode, a place, or part of a name — <em>LL71 8AG</em>, <em>Stoke Newington</em>, <em>St Mary's</em>, <em>Methodist</em>. The map filters as you type.</p>
 
       <form id="find-form" autocomplete="off">
-        <input type="text" id="q" placeholder="e.g. LL71 8AG, or Hackney…" aria-label="Postcode or place" />
+        <input type="text" id="q" placeholder="postcode, place or name…" aria-label="Postcode, place or name" />
         <div class="actions">
           <button type="submit">Find</button>
           <button type="button" id="clear-btn" class="ghost">Clear</button>
@@ -54,9 +54,9 @@
         </button>
       </form>
 
-      <div class="status-legend">
-        <p class="label">Status</p>
-        <ul id="status-legend">
+      <div class="filter-block">
+        <p class="label">Filter by status</p>
+        <ul class="chip-list" id="status-legend">
           <li data-status="at-risk"><span class="dot" style="background: var(--status-at-risk)"></span> At risk <span class="count" data-count="at-risk">0</span></li>
           <li data-status="rescued"><span class="dot" style="background: var(--status-rescued)"></span> Rescued <span class="count" data-count="rescued">0</span></li>
           <li data-status="preserved"><span class="dot" style="background: var(--status-preserved)"></span> Preserved <span class="count" data-count="preserved">0</span></li>
@@ -66,7 +66,12 @@
         </ul>
       </div>
 
-      <p class="tips">Click any dot on the map — or any church on the right — to read its story.</p>
+      <div class="filter-block">
+        <p class="label">Filter by denomination</p>
+        <ul class="chip-list chip-list--denom" id="denom-chips" role="listbox" aria-label="Denomination filter"></ul>
+      </div>
+
+      <p class="tips">Tap a chip to filter — tap again to clear. Click any dot on the map to read its story.</p>
     </aside>
 
     <!-- MIDDLE: map -->
