@@ -22,7 +22,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-from _util import RAW, slugify, infer_denomination, canonicalise_denomination
+from _util import RAW, slugify, infer_denomination, canonicalise_denomination, infer_period
 
 REPO = Path(__file__).parent.parent
 DATA = REPO / "data"
@@ -406,6 +406,23 @@ def main():
         if canon != d.get("current"):
             d["current"] = canon
             b["denomination"] = d
+
+    # Infer earliest-fabric date + era for each building. Mines
+    # name + listing description + body + summary, plus structured
+    # fabric.phases on hand-curated records.
+    for b in combined:
+        fabric = b.get("fabric") or {}
+        year, era = infer_period(
+            name=b.get("name"),
+            body=None,  # not surfaced in schema v2 records
+            summary=b.get("summary"),
+            listing_reason=(b.get("listing") or {}).get("reason"),
+            fabric_phases=fabric.get("phases"),
+        )
+        if year:
+            fabric["earliestDate"] = year
+            fabric["era"] = era
+            b["fabric"] = fabric
 
     # Count statuses
     counts: dict[str, int] = {}

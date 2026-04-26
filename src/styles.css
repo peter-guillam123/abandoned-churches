@@ -957,7 +957,9 @@ main.shell {
 .detail .hero figcaption {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 20px;
   padding: 10px 4px 0;
   font-family: var(--ui);
   font-size: 11px;
@@ -965,19 +967,21 @@ main.shell {
   color: var(--ink-mute);
 }
 .detail .hero figcaption .caption {
+  flex: 1 1 60%;
+  min-width: 0;
   font-family: var(--body);
   font-style: italic;
   font-size: 13px;
   color: var(--ink-soft);
 }
 .detail .hero figcaption .credit {
+  flex: 0 0 auto;
   font-family: var(--ui);
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-mute);
   text-align: right;
-  white-space: nowrap;
 }
 .detail .hero figcaption a {
   color: var(--ink-soft);
@@ -1721,9 +1725,9 @@ footer.foot a:hover { border-bottom-style: solid; }
   .finder > .kicker { order: 1; margin: 0; }
   .finder > .intro  { order: 2; margin: 0; }
   .finder > #find-form { order: 3; }
-  .stage { order: 4; }
-  .reading-panel { order: 5; position: static; }
-  .finder > .filter-drawer { order: 6; }
+  .finder > .filter-drawer { order: 4; }   /* sits with the search */
+  .stage { order: 5; }
+  .reading-panel { order: 6; position: static; }
   .finder > .tips { order: 7; }
 
   /* Collapsible drawer is the whole story on mobile — show the
@@ -1760,6 +1764,19 @@ footer.foot a:hover { border-bottom-style: solid; }
   .detail .long    { order: 1; }
   .detail .hero { padding: 0; }
   .detail .hero img { max-height: 380px; }
+  /* Stack caption and credit on mobile so neither has to truncate */
+  .detail .hero figcaption {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 10px 18px 0;
+  }
+  .detail .hero figcaption .credit {
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
 
   /* Hanging-quote pull-back doesn't fit narrow columns gracefully —
      drop the negative margin on mobile. */

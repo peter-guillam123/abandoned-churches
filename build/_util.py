@@ -151,6 +151,240 @@ def read_raw(name: str) -> list[dict]:
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+# ----------------------------------------------------------------------
+# Period / age extraction
+# ----------------------------------------------------------------------
+#
+# We mine the building's free text — name + listing description + body
+# + summary — for the EARLIEST date or century mentioned. NHLE listing
+# entries use compact century notation ("C13", "Late C12"); FoFC and
+# CCT prose tends toward "13th century" or explicit years ("1859");
+# and a final fallback recognises period-name keywords ("Norman",
+# "Tudor", "Victorian"). The earliest-of-these wins because that's
+# usually when the surviving fabric began.
+#
+# Output:
+#   periodCentury: int (e.g. 13 for C13)
+#   periodEra: one of the canonical buckets
+#                 "Pre-Conquest" (<1066), "Norman" (1066-1199),
+#                 "Medieval" (1200-1499), "Tudor & Stuart" (1500-1714),
+#                 "Georgian" (1715-1836), "Victorian" (1837-1901),
+#                 "20th century onwards" (1902+)
+
+ERA_BUCKETS = [
+    (-9999, 1065, "Pre-Conquest"),
+    (1066, 1199, "Norman"),
+    (1200, 1499, "Medieval"),
+    (1500, 1714, "Tudor & Stuart"),
+    (1715, 1836, "Georgian"),
+    (1837, 1901, "Victorian"),
+    (1902, 9999, "20th century onwards"),
+]
+
+PERIOD_KEYWORDS = [
+    # (regex, midpoint year used as a representative date)
+    (re.compile(r"\bPre[-\s]?Conquest\b|\bSaxon\b|\bAnglo[-\s]?Saxon\b", re.I), 950),
+    (re.compile(r"\bNorman\b|\bRomanesque\b", re.I), 1100),
+    (re.compile(r"\bEarly\s+English\b", re.I), 1230),
+    (re.compile(r"\bDecorated\b(?:\s+(?:Gothic|style))?", re.I), 1330),
+    (re.compile(r"\bPerpendicular\b(?:\s+(?:Gothic|style))?", re.I), 1430),
+    (re.compile(r"\bTudor\b", re.I), 1530),
+    (re.compile(r"\bElizabethan\b", re.I), 1580),
+    (re.compile(r"\bJacobean\b", re.I), 1620),
+    (re.compile(r"\bStuart\b|\bRestoration\b", re.I), 1670),
+    (re.compile(r"\bGeorgian\b", re.I), 1750),
+    (re.compile(r"\bRegency\b", re.I), 1815),
+    (re.compile(r"\bGothic\s+Revival\b", re.I), 1870),
+    (re.compile(r"\bVictorian\b", re.I), 1870),
+    (re.compile(r"\bEdwardian\b", re.I), 1905),
+    (re.compile(r"\bMedieval\b|\bMediaeval\b", re.I), 1300),
+]
+
+# C13, C14*, "late C12", etc. — NHLE convention is capital C, exactly.
+# Lower-case `c1100` means *circa 1100* and must not match this.
+CENTURY_RE = re.compile(
+    r"(?P<modifier>(?:Early|Mid|Late)[\s-]?)?C\s?(?P<n>1[0-9]|[1-9])(?:th)?(?:[\s-]?cent(?:ury)?)?",
+)
+# "13th century", "fourteenth century"
+ORDINAL_CENTURY_RE = re.compile(
+    r"\b(?P<n>[1-9][0-9]?)(?:st|nd|rd|th)\s+century\b",
+    re.I,
+)
+# Explicit year — between 700 and 2029. Allow optional circa prefix
+# ("c1100", "c.1380", "circa 1380"). Must be word-bounded after.
+YEAR_RE = re.compile(
+    r"(?:\bc\.?\s*|\bcirca\s+)?(?<![\d/.])(?P<y>(?:6[5-9][0-9]|[7-9][0-9]{2}|1[0-9]{3}|20[0-2][0-9]))\b"
+)
+
+
+def _century_to_year(n: int, modifier: str | None) -> int:
+    """Return a representative year inside the given century.
+    For C13 → 1230 (early), 1250 (mid), 1280 (late), 1230 default."""
+    base = (n - 1) * 100
+    mod = (modifier or "").strip().lower()
+    if mod.startswith("early"):
+        return base + 25
+    if mod.startswith("mid"):
+        return base + 50
+    if mod.startswith("late"):
+        return base + 80
+    return base + 30  # plain "C13" — early-third
+
+
+# Phrases that look like dates but refer to something else.
+# "800-year-old", "900 years of craftsmanship", "untouched for 700
+# years" are ages, not founding years. "C6th St Doged" or "6th century
+# site of St Beuno" refers to a saint, not the building.
+NOISE_PATTERNS = [
+    # "800-year-old" / "800 year old"
+    re.compile(r"\b\d{2,4}[-\s]?year[-\s]?old\b", re.I),
+    # "900 years of …" / "for 700 years" / "in 800 years" — generic age
+    re.compile(r"\b(?:for|in|over|of|after|nearly|almost|some|about|over)\s+\d{2,4}\s+years?\b", re.I),
+    re.compile(r"\b\d{2,4}\s+years\s+(?:of|since|ago|on|under|untouched|after|before)\b", re.I),
+    # "C6th St Beuno" / "Saint Doged C6th" / "6th century St Beuno"
+    re.compile(r"\b(?:St|Saint|Bishop|King|Queen|Pope)\.?\s+\w+,?\s+(?:a\s+)?(?:[Cc]\s?\d{1,2}(?:th)?|\d{1,2}(?:st|nd|rd|th)\s+century)", re.I),
+    re.compile(r"\b(?:[Cc]\s?\d{1,2}(?:th)?|\d{1,2}(?:st|nd|rd|th)\s+century)\s+(?:site\s+of\s+)?(?:St\b|Saint\b|martyr|monk|missionary|abbess?|abbot|hermit)", re.I),
+    # "site of St Beuno's cell" — strip the saint clause
+    re.compile(r"\bsite\s+of\s+St\.?\s+\w+", re.I),
+    # NHLE list-reference serials like "811/1/298", "1478-4/10003",
+    # "8/12" — typewriter index numbers, not dates.
+    re.compile(r"\b\d{1,5}[-/]\d{1,3}(?:/\d{2,5})?\b"),
+    # Capacity numbers — "designed to seat between 700 and 800 people"
+    # / "300 sittings" / "150 souls".
+    re.compile(
+        r"\b\d{2,4}(?:\s*(?:to|and|or|-)\s*\d{2,4})?\s+"
+        r"(?:people|persons|seats?|sittings?|congregants?|worshippers?|"
+        r"men|women|families|souls|sq\.?\s*ft|sq\.?\s*m)\b",
+        re.I,
+    ),
+    # OS National Grid Refs at the top of NHLE entries — letters then
+    # digits, sometimes with a compass suffix (TQ 0123 4567, SP52NE).
+    re.compile(r"\b[A-Z]{2}\s?\d{1,5}(?:\s+\d{1,5})?(?:\s?[NSEW]{1,2})?\b"),
+]
+
+
+def _scrub_noise(text: str) -> str:
+    """Replace noise phrases with spaces so they don't show up in
+    extract_dates' regex matches."""
+    if not text:
+        return ""
+    out = text
+    for rx in NOISE_PATTERNS:
+        out = rx.sub(lambda m: " " * len(m.group(0)), out)
+    return out
+
+
+def extract_dates(text: str) -> list[int]:
+    """Return all plausible dates found in a piece of free text, oldest
+    first."""
+    if not text:
+        return []
+    text = _scrub_noise(text)
+    found: list[int] = []
+    for m in CENTURY_RE.finditer(text):
+        try:
+            n = int(m.group("n"))
+            if 5 <= n <= 21:
+                found.append(_century_to_year(n, m.group("modifier")))
+        except (TypeError, ValueError):
+            continue
+    for m in ORDINAL_CENTURY_RE.finditer(text):
+        try:
+            n = int(m.group("n"))
+            if 5 <= n <= 21:
+                found.append(_century_to_year(n, None))
+        except (TypeError, ValueError):
+            continue
+    for m in YEAR_RE.finditer(text):
+        try:
+            y = int(m.group("y"))
+            if 700 <= y <= 2030:
+                # Skip obvious listing-date / postcode dates by checking
+                # for ISO-ish proximity.
+                start = max(0, m.start() - 6)
+                ctx = text[start:m.end() + 6]
+                if re.search(r"-\d{2}-\d{2}", ctx):
+                    continue
+                found.append(y)
+        except (TypeError, ValueError):
+            continue
+    # Period keywords are weakest signal — only use them when nothing
+    # else fired. Otherwise "Norman font in a Victorian church" would
+    # falsely date the whole building to 1100.
+    if not found:
+        for regex, year in PERIOD_KEYWORDS:
+            if regex.search(text):
+                found.append(year)
+                break
+    return sorted(set(found))
+
+
+def year_to_era(year: int) -> str | None:
+    if year is None:
+        return None
+    for lo, hi, label in ERA_BUCKETS:
+        if lo <= year <= hi:
+            return label
+    return None
+
+
+def infer_period(name: str | None, body: str | None,
+                 summary: str | None, listing_reason: str | None,
+                 fabric_phases: list[dict] | None = None) -> tuple[int | None, str | None]:
+    """Best-guess earliest-extant-date for a building, plus its era
+    bucket.
+
+    Sources are weighted by how reliable they are for the BUILDING's
+    date (vs. an artefact's, or a saint's, or an age-phrase):
+      1. `fabric.phases[0]` from hand-curated records — canonical.
+      2. NHLE listing description — first explicit year is normally
+         when the present church was built.
+      3. The summary line as a fallback only.
+
+    The first source that yields a candidate wins; we don't blend
+    across sources, so a Victorian church with a Saxon font isn't
+    pulled back into the Saxon era by a keyword in the summary."""
+
+    if fabric_phases:
+        for p in fabric_phases:
+            yr = p.get("year") if isinstance(p, dict) else None
+            if isinstance(yr, int):
+                return yr, year_to_era(yr)
+            if isinstance(yr, str):
+                ys = extract_dates(yr)
+                if ys:
+                    return ys[0], year_to_era(ys[0])
+
+    if listing_reason:
+        ys = extract_dates(listing_reason)
+        if ys:
+            return ys[0], year_to_era(ys[0])
+
+    # Marketing-copy summaries (FoFC, CCT) are unreliable for periods —
+    # they mention features (Saxon font, Norman door) and ages
+    # ("800-year-old") that the noise scrub mostly handles, but to be
+    # safe we only accept an explicit 4-digit YEAR from these — no
+    # centuries, no period keywords. That filters "Saxon survivor" and
+    # "C6th St Beuno's" while still catching "1689 by Henry Oxley".
+    for source in (body, summary, name):
+        if not source:
+            continue
+        scrubbed = _scrub_noise(source)
+        years_only: list[int] = []
+        for m in YEAR_RE.finditer(scrubbed):
+            try:
+                y = int(m.group("y"))
+                if 1000 <= y <= 2030:
+                    years_only.append(y)
+            except (TypeError, ValueError):
+                continue
+        if years_only:
+            best = min(years_only)
+            return best, year_to_era(best)
+
+    return None, None
+
+
 # Canonical names for filter chips. Variants from hand-curated records
 # ("Church of England (Diocese of York)", "Roman Catholic Church") all
 # collapse to one of these so the UI doesn't show fifty near-duplicates.

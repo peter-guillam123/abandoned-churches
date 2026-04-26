@@ -15,6 +15,7 @@ const state = {
   buildings: [],
   selectedStatus: null,        // null = all visible. Otherwise a single status string.
   selectedDenomination: null,  // null = all. Otherwise a canonical denomination.
+  selectedPeriod: null,        // null = all. Otherwise an era bucket from fabric.era.
   nameQuery: '',               // debounced free-text filter against name + place
   mode: 'overview',            // 'overview' | 'located'
   origin: null,                // { lat, lon, label } when located
@@ -35,6 +36,7 @@ const el = {
   detail: document.getElementById('detail'),
   legend: document.getElementById('status-legend'),
   denomChips: document.getElementById('denom-chips'),
+  periodChips: document.getElementById('period-chips'),
   submitModal: document.getElementById('submit-modal'),
   submitClose: document.getElementById('submit-close'),
   submitForm: document.getElementById('submit-form'),
@@ -69,6 +71,10 @@ function passesFilters(b) {
     const d = (b.denomination && b.denomination.current) || null;
     if (d !== state.selectedDenomination) return false;
   }
+  if (state.selectedPeriod) {
+    const era = (b.fabric && b.fabric.era) || null;
+    if (era !== state.selectedPeriod) return false;
+  }
   if (!matchesNameQuery(b, state.nameQuery)) return false;
   return true;
 }
@@ -94,8 +100,9 @@ function renderResultList(list, { showDistance, totalCount, eyebrow }) {
   el.resultList.innerHTML = hint + list.map((b) => {
     const color = `var(--status-${b.status})`;
     const denom = (b.denomination && b.denomination.current) || '';
+    const era = (b.fabric && b.fabric.era) || '';
     const place = placeLabel(b);
-    const placeLine = [place, denom].filter(Boolean).join(' · ');
+    const placeLine = [place, denom, era].filter(Boolean).join(' · ');
     return `
       <li class="result" data-id="${b.id}">
         <span class="dot" style="background:${color}"></span>
@@ -221,6 +228,58 @@ function refreshDenominationChipState() {
   el.denomChips.querySelectorAll('li').forEach((li) => {
     li.classList.toggle('chip-on', li.dataset.denom === state.selectedDenomination);
     li.setAttribute('aria-pressed', String(li.dataset.denom === state.selectedDenomination));
+  });
+}
+
+// ---- Period chips -------------------------------------------------------
+//
+// Era buckets come straight from the data — fabric.era is one of the
+// canonical strings emitted by infer_period in build_register.py.
+
+const PERIOD_ORDER = [
+  'Pre-Conquest',
+  'Norman',
+  'Medieval',
+  'Tudor & Stuart',
+  'Georgian',
+  'Victorian',
+  '20th century onwards',
+];
+
+function renderPeriodChips() {
+  const counts = {};
+  state.buildings.forEach((b) => {
+    const era = (b.fabric && b.fabric.era) || null;
+    if (!era) return;
+    counts[era] = (counts[era] || 0) + 1;
+  });
+  const ordered = PERIOD_ORDER.filter((p) => counts[p]);
+
+  el.periodChips.innerHTML = ordered.map((p) => `
+    <li role="button" tabindex="0" data-period="${p}" aria-pressed="false">
+      <span class="dlabel">${p}</span>
+      <span class="dcount">${counts[p].toLocaleString()}</span>
+    </li>
+  `).join('');
+
+  el.periodChips.querySelectorAll('li').forEach((li) => {
+    const click = () => {
+      const p = li.dataset.period;
+      state.selectedPeriod = state.selectedPeriod === p ? null : p;
+      refreshPeriodChipState();
+      rerender();
+    };
+    li.addEventListener('click', click);
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); click(); }
+    });
+  });
+}
+
+function refreshPeriodChipState() {
+  el.periodChips.querySelectorAll('li').forEach((li) => {
+    li.classList.toggle('chip-on', li.dataset.period === state.selectedPeriod);
+    li.setAttribute('aria-pressed', String(li.dataset.period === state.selectedPeriod));
   });
 }
 
@@ -352,6 +411,7 @@ function resetOverview() {
   state.origin = null;
   state.selectedStatus = null;
   state.selectedDenomination = null;
+  state.selectedPeriod = null;
   state.nameQuery = '';
   clearMe();
   framePoints(state.buildings, 60);
@@ -360,6 +420,7 @@ function resetOverview() {
   el.idleState.hidden = true;
   refreshStatusChipState();
   refreshDenominationChipState();
+  refreshPeriodChipState();
   rerender();
   renderDetail(el.detail, null);
 }
@@ -438,6 +499,7 @@ async function boot() {
   }
   refreshLegendCounts();
   renderDenominationChips();
+  renderPeriodChips();
 
   await new Promise((r) => {
     const check = () => {

@@ -70,11 +70,20 @@ function factBand(b) {
   const custodianVal = b.custodian?.body
     ? (b.custodian.since ? `${b.custodian.body} · since ${b.custodian.since}` : b.custodian.body)
     : null;
+  // Period — combines the era bucket with the earliest fabric date
+  // when we have one ("Medieval · c. 1330"), or just the era.
+  let periodVal = null;
+  const era = b.fabric?.era;
+  const earliest = b.fabric?.earliestDate;
+  if (era && earliest) periodVal = `${era} · c. ${earliest}`;
+  else if (era) periodVal = era;
+  else if (earliest) periodVal = `c. ${earliest}`;
+
   return `
     <div class="factline">
       ${status}
       ${fact('Listing', listingVal)}
-      ${fact('Listed', b.listing?.listedOn)}
+      ${fact('Period', periodVal)}
       ${fact('Custodian', custodianVal)}
       ${fact('Last service', b.lastService)}
     </div>
