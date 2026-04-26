@@ -55,6 +55,15 @@ def load_commons_photos() -> dict[str, dict]:
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+def load_nhle() -> dict[str, dict]:
+    """NHLE listing descriptions + Wikipedia + Wikidata, keyed by
+    list_entry (string)."""
+    p = RAW / "_nhle.json"
+    if not p.exists():
+        return {}
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
 def load_geograph_photos() -> dict[str, dict]:
     p = RAW / "_geograph.json"
     if not p.exists():
@@ -200,11 +209,24 @@ _HAR_STATUS = {
 }
 
 
-def from_har(r: dict) -> dict:
+def from_har(r: dict, nhle: dict[str, dict] | None = None) -> dict:
     name = r.get("name") or "Unknown place of worship"
     council = r.get("local_auth") or None
     condition = (r.get("condition") or "").lower()
     status = _HAR_STATUS.get(condition, "at-risk")
+    le = str(r.get("list_entry") or "")
+    nhle_data = (nhle or {}).get(le) or {}
+    listing_text = nhle_data.get("description")
+    wiki_url = nhle_data.get("wikipediaUrl")
+    blb_url = nhle_data.get("blbUrl")
+    sources = [
+        {"label": f"Historic England · list entry {le}",
+         "url": f"https://historicengland.org.uk/listing/the-list/list-entry/{le}/" if le else None},
+    ]
+    if blb_url:
+        sources.append({"label": "British Listed Buildings", "url": blb_url})
+    if wiki_url:
+        sources.append({"label": "Wikipedia", "url": wiki_url})
     return {
         "id": f"har-{slugify(name)}-{r.get('list_entry') or r.get('har_id')}",
         "name": name,
@@ -230,7 +252,10 @@ def from_har(r: dict) -> dict:
             "grade": r.get("grade"),
             "listedOn": None,
             "body": "Historic England",
-            "reason": r.get("description"),
+            # Prefer the full NHLE listing description (parsed from BLB)
+            # over the short HAR caseworker note. Falls back gracefully
+            # when the NHLE pull is missing or empty.
+            "reason": listing_text or r.get("description"),
             "associated": [],
         },
         "fabric": {"firstWorship": None, "phases": [], "materials": None, "plan": None, "style": None},
@@ -253,12 +278,13 @@ def from_har(r: dict) -> dict:
         "quotes": [],
         "coverage": {"guardian": []},
         "imagery": {"hero": None, "gallery": []},
-        "sources": [
-            {"label": f"Historic England Heritage at Risk · list entry {r.get('list_entry')}",
-             "url": f"https://historicengland.org.uk/listing/the-list/list-entry/{r.get('list_entry')}/" if r.get("list_entry") else None},
-        ],
+        "sources": sources,
         "summary": (r.get("description") or "").strip().split(". ")[0] or None,
-        "provenance": "Historic England Heritage at Risk Register (2024 annual release).",
+        "provenance": (
+            "Historic England Heritage at Risk Register (2024 annual release). "
+            + ("NHLE listing description via britishlistedbuildings.co.uk." if listing_text else "")
+        ).strip(),
+        "wikipediaUrl": wiki_url,
     }
 
 
@@ -352,7 +378,8 @@ def main():
     hand = load_hand()
     fofc = [from_fofc(r) for r in load_raw("fofc")]
     cct = [from_cct(r) for r in load_raw("cct")]
-    har = [from_har(r) for r in load_raw("heritage_at_risk")]
+    nhle = load_nhle()
+    har = [from_har(r, nhle) for r in load_raw("heritage_at_risk")]
     enrichment = load_enrichment()
     commons = load_commons_photos()
     geograph = load_geograph_photos()

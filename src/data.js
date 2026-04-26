@@ -52,9 +52,21 @@ export const STATUS_LABELS = {
 
 // Editorial place label — "Llandyfrydog, Anglesey". Used in result lists
 // and in the detail header. Written once so the UI speaks consistently.
+//
+// Most records carry settlement + region, but Heritage at Risk entries
+// arrive with neither (the HAR feed only ships an EntryName). For
+// those, fall back through the postcodes.io enrichment fields so we
+// always say *something* concrete: parish + council, or council on
+// its own when there's no civil parish.
 export function placeLabel(b) {
-  const parts = [b.place?.settlement, b.place?.region].filter(Boolean);
-  return parts.join(', ');
+  const p = b.place || {};
+  const settlement = p.settlement;
+  const region = p.region;
+  if (settlement || region) {
+    return [settlement, region].filter(Boolean).join(', ');
+  }
+  const fallback = [p.parish, p.council, p.constituency].filter(Boolean);
+  return fallback.length ? fallback[0] + (fallback.length > 1 ? `, ${fallback[fallback.length - 1]}` : '') : '';
 }
 
 export function denominationLabel(b) {

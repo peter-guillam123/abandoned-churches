@@ -73,6 +73,12 @@ jobs:
         # checkpoints so partial runs are still useful.
         run: python3 fetch_commons.py
 
+      - name: Pull NHLE listing descriptions (via britishlistedbuildings.co.uk)
+        working-directory: build
+        # ~25 min cold, near-zero on cached re-runs (HTML pages cache
+        # in build/_cache and per-record results in _raw/_nhle.json).
+        run: python3 fetch_nhle.py
+
       - name: Build the merged register
         working-directory: build
         run: python3 build_register.py

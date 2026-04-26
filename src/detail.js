@@ -15,6 +15,19 @@ const STATUS_COLORS = {
   demolished: 'var(--status-demolished)',
 };
 
+// Escape user-visible / source-text content for safe interpolation
+// into HTML. Most of our copy is editor-trusted, but the NHLE listing
+// descriptions are scraped from a third-party mirror and routed
+// through here.
+function escapeHtml(s) {
+  return String(s ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
 
 function heroSection(b) {
   const h = b.imagery?.hero;
@@ -71,7 +84,20 @@ function factBand(b) {
 function listEntryPanel(b) {
   const bits = [];
   if (b.listing?.reason) {
-    bits.push(`<p class="pull">"${b.listing.reason}"<cite>${b.listing.body || 'Listing body'} · ${b.listing.grade ? 'Grade ' + b.listing.grade : ''}${b.listing.listedOn ? ', ' + b.listing.listedOn : ''}</cite></p>`);
+    const text = b.listing.reason;
+    const cite = `${b.listing.body || 'Listing body'} · ${b.listing.grade ? 'Grade ' + b.listing.grade : ''}${b.listing.listedOn ? ', ' + b.listing.listedOn : ''}`;
+    if (text.length > 400) {
+      // Long NHLE-style description — preserve the original typewriter
+      // formatting (line breaks, indents) and let it run as a panel.
+      bits.push(`
+        <div class="listing-text">
+          <pre>${escapeHtml(text)}</pre>
+          <cite>${cite}</cite>
+        </div>
+      `);
+    } else {
+      bits.push(`<p class="pull">"${escapeHtml(text)}"<cite>${cite}</cite></p>`);
+    }
   }
   if (b.fabric?.materials) bits.push(`<p class="para">${b.fabric.materials}</p>`);
   if (b.fabric?.plan) bits.push(`<p class="para">${b.fabric.plan}</p>`);
@@ -231,6 +257,30 @@ export function render(el, building) {
       : `<span class="nolink">${l.label}</span>`)
     .join(' · ');
 
+  // Two outbound buttons in the sidecar:
+  // - Street View opens Google Maps in pano mode at the building's
+  //   coords. No API key, no quota.
+  // - Wikipedia link surfaces only when we have a known article via
+  //   the NHLE → Wikidata join.
+  const lat = building.lat;
+  const lon = building.lon;
+  const streetViewUrl = (lat && lon)
+    ? `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`
+    : null;
+  const wikipediaUrl = building.wikipediaUrl || null;
+  const externalButtons = `
+    <div class="external-links">
+      ${streetViewUrl ? `<a class="ext-btn" href="${streetViewUrl}" target="_blank" rel="noopener" aria-label="Open Google Street View at this location">
+        <span class="ext-icon" aria-hidden="true">◷</span>
+        <span class="ext-label">Street view</span>
+      </a>` : ''}
+      ${wikipediaUrl ? `<a class="ext-btn" href="${escapeHtml(wikipediaUrl)}" target="_blank" rel="noopener" aria-label="Read this church on Wikipedia">
+        <span class="ext-icon" aria-hidden="true">W</span>
+        <span class="ext-label">Wikipedia</span>
+      </a>` : ''}
+    </div>
+  `;
+
   el.innerHTML = `
     ${heroSection(building)}
 
@@ -238,7 +288,7 @@ export function render(el, building) {
       <article class="long">
         <p class="kicker">Building · ${building.place?.nation || ''}</p>
         <h2>${building.name}</h2>
-        <p class="place-line">${placeLabel(building)} · ${denominationLabel(building)}</p>
+        <p class="place-line">${[placeLabel(building), denominationLabel(building)].filter(Boolean).join(' · ')}</p>
 
         ${factBand(building)}
 
@@ -254,6 +304,8 @@ export function render(el, building) {
       </article>
 
       <aside class="sidecar">
+        ${externalButtons}
+
         <div class="submit-card">
           <p class="label">Do you know this church?</p>
           <h3>Share a memory, or a photograph.</h3>

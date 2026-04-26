@@ -1061,6 +1061,49 @@ main.shell {
   margin: 0 0 14px;
   max-width: 62ch;
 }
+/* Long-form NHLE listing description. Preserves the typewriter
+   formatting of the original NHLE entry — the line breaks and
+   indents are part of the document. Sits in a quiet bone panel so
+   the reader knows it's a verbatim authority text, not editorial. */
+.detail .listing-text {
+  margin: 0 0 28px;
+  padding: 22px 24px 18px;
+  background: var(--bone);
+  border-top: 2px solid var(--verdigris);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.detail .listing-text pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: break-word;
+  max-height: 360px;
+  overflow-y: auto;
+  /* a soft thumb on the scroller */
+  scrollbar-width: thin;
+  scrollbar-color: var(--paper-rule) transparent;
+}
+.detail .listing-text pre::-webkit-scrollbar { width: 8px; }
+.detail .listing-text pre::-webkit-scrollbar-thumb {
+  background: var(--paper-rule);
+  border-radius: 4px;
+}
+.detail .listing-text cite {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
 /* Pull-quote from the list entry — distinct from a voices blockquote:
    this is the heritage authority speaking, so it reads as plate-
    mounted text rather than a spoken quotation. */
@@ -1358,6 +1401,52 @@ main.shell {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+}
+
+/* External link buttons — Street View, Wikipedia. Two-up row above
+   the submit card. Reads as outbound exits, not editorial CTAs. */
+.detail .sidecar .external-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.detail .sidecar .external-links:has(.ext-btn + .ext-btn) {
+  grid-template-columns: 1fr 1fr;
+}
+.detail .sidecar .ext-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--bone);
+  border: 1px solid var(--paper-rule);
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 140ms, border-color 140ms, color 140ms;
+}
+.detail .sidecar .ext-btn:hover {
+  background: var(--paper-deep);
+  border-color: var(--verdigris);
+  color: var(--verdigris-deep);
+}
+.detail .sidecar .ext-btn .ext-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--verdigris);
+  color: var(--verdigris-deep);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
 }
 
 .detail .sidecar .submit-card {
