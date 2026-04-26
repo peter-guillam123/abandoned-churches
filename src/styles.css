@@ -856,6 +856,90 @@ main.shell {
 }
 .reading-panel .idle-state em { color: var(--ink); font-style: italic; }
 
+/* Active-filters bar — lozenges above the result list, one per
+   filter dimension that's currently on. Each lozenge is a tappable
+   pill that clears its filter; "Clear all" appears once two or more
+   are active. */
+.reading-panel .active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+.reading-panel .active-filters[hidden] { display: none; }
+.reading-panel .lozenge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 10px;
+  background: var(--bone);
+  border: 1px solid var(--verdigris);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 140ms, border-color 140ms;
+}
+.reading-panel .lozenge:hover {
+  background: var(--paper-deep);
+  border-color: var(--verdigris-deep);
+}
+.reading-panel .lozenge .lozenge-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.reading-panel .lozenge .lozenge-label {
+  font-family: var(--body);
+  font-size: 13px;
+  color: var(--ink);
+  /* Soften the truncation on long denomination strings */
+  max-width: 14em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reading-panel .lozenge .lozenge-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-mute);
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  transition: background 140ms, color 140ms;
+}
+.reading-panel .lozenge:hover .lozenge-x {
+  background: var(--madder);
+  color: var(--paper);
+}
+/* The "Clear all" pill is monochrome, no eyebrow, sits at the end. */
+.reading-panel .lozenge-clear-all {
+  background: transparent;
+  border-color: var(--paper-rule);
+  color: var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+}
+.reading-panel .lozenge-clear-all:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
 .reading-panel .result-list {
   list-style: none;
   padding: 0;

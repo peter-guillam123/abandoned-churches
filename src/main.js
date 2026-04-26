@@ -37,6 +37,7 @@ const el = {
   legend: document.getElementById('status-legend'),
   denomChips: document.getElementById('denom-chips'),
   periodChips: document.getElementById('period-chips'),
+  activeFilters: document.getElementById('active-filters'),
   submitModal: document.getElementById('submit-modal'),
   submitClose: document.getElementById('submit-close'),
   submitForm: document.getElementById('submit-form'),
@@ -283,6 +284,116 @@ function refreshPeriodChipState() {
   });
 }
 
+// ---- Active-filters bar -------------------------------------------------
+//
+// Lozenges above the result list — one per active filter — each with
+// a dismiss × that clears that single filter. When two or more are
+// on, an extra "Clear all" pill clears the lot. The bar hides itself
+// when nothing's active so it doesn't take up space in the idle state.
+
+function renderActiveFilters() {
+  const lozenges = [];
+
+  if (state.mode === 'located' && state.origin) {
+    lozenges.push({
+      kind: 'origin',
+      label: state.origin.label,
+      eyebrow: 'near',
+      action: () => resetOverview(),
+    });
+  }
+  if (state.nameQuery) {
+    lozenges.push({
+      kind: 'name',
+      label: `“${state.nameQuery}”`,
+      eyebrow: 'search',
+      action: () => {
+        state.nameQuery = '';
+        el.q.value = '';
+        rerender();
+      },
+    });
+  }
+  if (state.selectedStatus) {
+    lozenges.push({
+      kind: 'status',
+      label: STATUS_LABELS[state.selectedStatus] || state.selectedStatus,
+      eyebrow: 'status',
+      action: () => {
+        state.selectedStatus = null;
+        refreshStatusChipState();
+        rerender();
+      },
+    });
+  }
+  if (state.selectedDenomination) {
+    lozenges.push({
+      kind: 'denom',
+      label: state.selectedDenomination,
+      eyebrow: 'denomination',
+      action: () => {
+        state.selectedDenomination = null;
+        refreshDenominationChipState();
+        rerender();
+      },
+    });
+  }
+  if (state.selectedPeriod) {
+    lozenges.push({
+      kind: 'period',
+      label: state.selectedPeriod,
+      eyebrow: 'period',
+      action: () => {
+        state.selectedPeriod = null;
+        refreshPeriodChipState();
+        rerender();
+      },
+    });
+  }
+
+  if (!lozenges.length) {
+    el.activeFilters.hidden = true;
+    el.activeFilters.innerHTML = '';
+    return;
+  }
+  el.activeFilters.hidden = false;
+  const showClearAll = lozenges.length >= 2;
+  el.activeFilters.innerHTML = lozenges.map((l, i) => `
+    <button type="button" class="lozenge lozenge-${l.kind}" data-i="${i}" aria-label="Remove ${l.eyebrow} filter ${l.label}">
+      <span class="lozenge-eyebrow">${l.eyebrow}</span>
+      <span class="lozenge-label">${l.label}</span>
+      <span class="lozenge-x" aria-hidden="true">×</span>
+    </button>
+  `).join('') + (showClearAll
+    ? `<button type="button" class="lozenge lozenge-clear-all" id="clear-all-filters" aria-label="Clear all filters">Clear all</button>`
+    : '');
+
+  el.activeFilters.querySelectorAll('button[data-i]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.i, 10);
+      lozenges[idx].action();
+    });
+  });
+  const clearAll = document.getElementById('clear-all-filters');
+  if (clearAll) {
+    clearAll.addEventListener('click', () => {
+      state.selectedStatus = null;
+      state.selectedDenomination = null;
+      state.selectedPeriod = null;
+      state.nameQuery = '';
+      state.mode = 'overview';
+      state.origin = null;
+      el.q.value = '';
+      clearMe();
+      framePoints(state.buildings, 60);
+      refreshStatusChipState();
+      refreshDenominationChipState();
+      refreshPeriodChipState();
+      rerender();
+    });
+  }
+}
+
 // ---- Main rerender -------------------------------------------------------
 //
 // Curated state: in overview mode with no filters and no search, show
@@ -292,9 +403,10 @@ function refreshPeriodChipState() {
 
 function rerender() {
   applyFilters(passesFilters);
+  renderActiveFilters();
 
   const list = visibleBuildings();
-  const hasFilters = state.selectedStatus || state.selectedDenomination || state.nameQuery;
+  const hasFilters = state.selectedStatus || state.selectedDenomination || state.selectedPeriod || state.nameQuery;
 
   if (state.mode === 'located' && state.origin) {
     const withDist = list
