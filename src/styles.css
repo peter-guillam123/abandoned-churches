@@ -418,14 +418,60 @@ main.shell {
   border-radius: 50%;
 }
 
+/* Filter drawer — wraps status + denomination chips. On desktop the
+   drawer is always open and the summary is hidden; on mobile it
+   collapses to a single tap-target so the map gets to the top of the
+   column faster. */
+.finder .filter-drawer {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--paper-rule);
+}
+.finder .filter-drawer > summary {
+  display: none;             /* desktop: chips already shown */
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 14px;
+  background: var(--bone);
+  border: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  user-select: none;
+}
+.finder .filter-drawer > summary::-webkit-details-marker { display: none; }
+.finder .filter-drawer > summary::after {
+  content: '⌄';
+  float: right;
+  font-family: var(--display);
+  font-size: 16px;
+  color: var(--verdigris);
+  transition: transform 200ms;
+}
+.finder .filter-drawer[open] > summary::after { transform: rotate(180deg); }
+.finder .filter-drawer .filter-summary-label {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.finder .filter-drawer .filter-summary-hint {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 /* Filter blocks — status + denomination. Each is a list of chips that
    click TO filter. A selected chip carries .chip-on; tapping it again
    clears the filter. Default state has no chip selected = all visible. */
 .finder .filter-block {
-  margin-top: 24px;
-  padding-top: 14px;
-  border-top: 1px solid var(--paper-rule);
+  margin-top: 18px;
 }
+.finder .filter-block:first-of-type { margin-top: 0; }
 .finder .chip-list {
   list-style: none;
   padding: 0;
@@ -1640,34 +1686,117 @@ footer.foot a {
 footer.foot a:hover { border-bottom-style: solid; }
 
 /* ----- Mobile ----- */
+/* ----- Mobile (≤960px) -------------------------------------------------
+   Reordered for a single-thumb scroll: search → map → results →
+   collapsed filters. The filter drawer's summary becomes visible on
+   mobile and tappable; it's still hidden on desktop where everything's
+   already on screen. The detail sidecar follows the article instead
+   of leading it. */
 @media (max-width: 960px) {
   .masthead {
     grid-template-columns: 1fr;
-    padding: 24px 20px 16px;
-    gap: 16px;
+    padding: 22px 20px 14px;
+    gap: 12px;
   }
+  .masthead .title { font-size: clamp(40px, 11vw, 56px); line-height: 0.92; }
+  .masthead .dek { font-size: 14px; line-height: 1.45; }
   .masthead .stat { text-align: left; }
-  .masthead .stat .big { font-size: 28px; display: inline-block; margin-right: 8px; }
-  .masthead .stat .stat-sub { display: inline; }
+  .masthead .stat .big { font-size: 26px; display: inline-block; margin-right: 8px; }
+  .masthead .stat .stat-sub { display: inline; font-size: 11px; }
+  .masthead .stat .stat-sub::before { content: ' · '; color: var(--ink-mute); }
   .rule-band { padding: 0 20px; }
   .subnav { padding: 10px 20px 0; gap: 18px; }
+
+  /* Reorder the main shell so the map is the third visible thing
+     after the masthead + search field, not after the long filter
+     column. .finder gets `display: contents` so its children become
+     direct flex items of the shell and can be ordered individually. */
   main.shell {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 16px 28px;
+    gap: 18px;
+  }
+  .finder { display: contents; position: static; }
+  .finder > .kicker { order: 1; margin: 0; }
+  .finder > .intro  { order: 2; margin: 0; }
+  .finder > #find-form { order: 3; }
+  .stage { order: 4; }
+  .reading-panel { order: 5; position: static; }
+  .finder > .filter-drawer { order: 6; }
+  .finder > .tips { order: 7; }
+
+  /* Collapsible drawer is the whole story on mobile — show the
+     summary tap-target and let the browser handle open/close. */
+  .finder .filter-drawer {
+    border-top: none;
+    padding-top: 0;
+  }
+  .finder .filter-drawer > summary {
+    display: block;
+  }
+  /* Padding inside the drawer body so it doesn't kiss the summary */
+  .finder .filter-drawer[open] > summary { margin-bottom: 14px; }
+
+  #map { height: 56vh; min-height: 360px; }
+
+  /* Compact the cartouche so it doesn't overlap the map's top-right
+     zoom region as the map narrows. */
+  .map-stage .cartouche {
+    top: 14px; right: 14px;
+    padding: 8px 12px 10px;
+    max-width: 64%;
+  }
+  .map-stage .cartouche .name { font-size: 18px; }
+  .map-stage .cartouche .subname { font-size: 10px; }
+
+  .detail .body {
     grid-template-columns: 1fr;
     padding: 20px;
     gap: 24px;
   }
-  .finder, .reading-panel { position: static; }
-  #map { height: 420px; }
-  .detail {
-    grid-template-columns: 1fr;
-    padding: 20px;
-    gap: 24px;
+  /* Sidecar follows the article rather than leading it */
+  .detail .sidecar { order: 2; }
+  .detail .long    { order: 1; }
+  .detail .hero { padding: 0; }
+  .detail .hero img { max-height: 380px; }
+
+  /* Hanging-quote pull-back doesn't fit narrow columns gracefully —
+     drop the negative margin on mobile. */
+  .detail blockquote {
+    margin-left: 0;
+    padding-left: 18px;
   }
-  .detail .sidecar {
-    order: -1;
+  .detail blockquote::before { left: -2px; font-size: 2.4em; }
+
+  /* NHLE listing text has long lines; let it overflow-scroll and
+     trim the panel so it doesn't fill the screen. */
+  .detail .listing-text {
+    padding: 16px 14px 14px;
   }
-  .detail .sidecar .chapel {
-    aspect-ratio: 16 / 10;
+  .detail .listing-text pre {
+    font-size: 12px;
+    max-height: 280px;
   }
-  footer.foot { padding: 20px; }
+
+  footer.foot { padding: 20px; font-size: 12px; }
+}
+
+/* On the smallest devices, drop the masthead stat to a single tight
+   line and tighten the subnav further. */
+@media (max-width: 480px) {
+  .masthead { padding: 18px 16px 12px; }
+  .masthead .title { font-size: clamp(36px, 13vw, 48px); }
+  .masthead .stat { font-size: 10px; }
+  .masthead .stat .big { font-size: 22px; }
+  main.shell { padding: 12px 14px 24px; gap: 14px; }
+  #map { height: 60vh; min-height: 320px; }
+  .map-stage .cartouche { top: 10px; right: 10px; padding: 6px 10px 8px; }
+  .map-stage .cartouche .eyebrow { font-size: 8px; letter-spacing: 0.24em; }
+  .map-stage .cartouche .name { font-size: 16px; }
+  .map-stage .cartouche .subname { display: none; }
+  .map-stage .compass { width: 48px; height: 48px; bottom: 28px; left: 14px; }
+  .detail .sidecar .external-links {
+    grid-template-columns: 1fr 1fr !important;
+  }
 }

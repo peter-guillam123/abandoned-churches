@@ -93,6 +93,21 @@
       border-bottom: 1px dotted var(--paper-rule);
     }
     .long ul.plain li:last-child { border-bottom: none; }
+    .long p.small-note {
+      margin: 6px 0 14px;
+      font-size: 14px;
+      color: var(--ink-mute);
+      padding: 12px 14px;
+      background: var(--bone);
+      border-left: 2px solid var(--paper-rule);
+    }
+    .long code {
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 1px 5px;
+      background: var(--bone);
+      border: 1px solid var(--paper-rule);
+    }
     @media (max-width: 720px) {
       .long { padding: 20px; }
       .long .statuses { grid-template-columns: 1fr; }
@@ -109,8 +124,8 @@
       How the register is built, what each status means, and how to contribute.
     </p>
     <div class="stat">
-      <span class="big">v0.1</span>
-      prototype<span class="stat-sub">April 2026</span>
+      <span class="big">1,390</span>
+      buildings in the register<span class="stat-sub" id="stat-sub">register · updated —</span>
     </div>
   </header>
 
@@ -124,49 +139,76 @@
 
   <section class="long">
     <p class="kicker">About this register</p>
-    <h2>A companion to The Guardian's reporting on derelict churches.</h2>
+    <h2>A reader's companion to The Guardian's reporting on the UK's derelict churches.</h2>
 
-    <p>"Abandoned" is not a category that appears in any of the official records. A closed church might be <em>redundant</em> to one body, <em>at risk</em> on another's register, and in the same year <em>vested</em> in a conservation charity that will spend a decade on its roof. This register tries to hold those categories together on one map so that a reader can see what is actually happening to a building, not only what happened to its paperwork.</p>
+    <p>"Abandoned" is not a category that appears in any official record. A closed church might be <em>redundant</em> to one body, <em>at risk</em> on another's register, and in the same year <em>vested</em> in a conservation charity that will spend a decade on its roof. This register tries to hold those categories together on one map, so that a reader can see what is actually happening to a building rather than only what happened to its paperwork.</p>
+
+    <p>It currently carries 1,390 churches, chapels and meeting houses across England and Wales — every Heritage at Risk place of worship in England, every building in the Friends of Friendless Churches gazetteer, every church the Churches Conservation Trust looks after, plus a small editorial spine of buildings drawn directly from the reporting series. 99% of the records carry a photograph, 96% carry a denomination, and the 928 English buildings on Heritage at Risk now carry the full National Heritage List for England listing description on their pages.</p>
 
     <h3>What the status colours mean</h3>
     <ul class="statuses">
-      <li><span class="dot" style="background: var(--status-at-risk)"></span><span><strong>At risk</strong>The building has serious condition problems and no funded plan to fix them. Most often from Historic England's Heritage at Risk register, or equivalent.</span></li>
-      <li><span class="dot" style="background: var(--status-rescued)"></span><span><strong>Rescued</strong>Recently taken into conservation care — a new roof or vesting agreement within the last few years.</span></li>
+      <li><span class="dot" style="background: var(--status-at-risk)"></span><span><strong>At risk</strong>The building has serious condition problems and no funded plan to fix them. From Historic England's Heritage at Risk register.</span></li>
+      <li><span class="dot" style="background: var(--status-rescued)"></span><span><strong>Rescued</strong>Recently taken into conservation care — a new roof, a vesting agreement, a major repair within the last few years.</span></li>
       <li><span class="dot" style="background: var(--status-preserved)"></span><span><strong>Preserved</strong>Held long-term by a conservation trust. No longer in regular worship, but the fabric is being actively maintained.</span></li>
       <li><span class="dot" style="background: var(--status-repurposed)"></span><span><strong>Repurposed</strong>The building is in active use, but not as a church. A mosque, a community centre, flats.</span></li>
       <li><span class="dot" style="background: var(--status-closed)"></span><span><strong>Closed, unresolved</strong>No longer in use; no plan yet for what happens next. The holding pattern that precedes either rescue or loss.</span></li>
       <li><span class="dot" style="background: var(--status-demolished)"></span><span><strong>Lost</strong>Demolished, or so far gone that the building no longer exists in any meaningful sense. Included for memory.</span></li>
     </ul>
+    <p>Cluster bubbles on the map take the dominant status colour of the buildings inside them — madder where risk concentrates, verdigris where the register has been taken into care, stone where closures and losses dominate.</p>
+
+    <h3>How to use it</h3>
+    <ul class="plain">
+      <li>Type a postcode, a place or part of a name into the search field. Postcode and place do a geographic lookup; anything else filters the visible register by name as you type.</li>
+      <li>Tap a status or denomination chip to filter to that category. Tap again to clear.</li>
+      <li>Click any dot on the map — or any entry in the right-hand panel — to read its story below.</li>
+      <li>Each building page carries a Street View link (opens Google Maps in pano mode at the building's coordinates) and, where one exists, a Wikipedia link.</li>
+    </ul>
 
     <h3>Sources the register draws from</h3>
     <ul class="plain">
-      <li><a href="https://www.nationalchurchestrust.org/">National Churches Trust</a> — the closest thing to an all-denomination census, with condition survey data.</li>
-      <li><a href="https://historicengland.org.uk/advice/heritage-at-risk/">Historic England Heritage at Risk</a> — the statutory at-risk register for England.</li>
-      <li><a href="https://friendsoffriendlesschurches.org.uk/">Friends of Friendless Churches</a> — the charity that rescues and holds ~70 churches in England and Wales.</li>
-      <li><a href="https://www.visitchurches.org.uk/">Churches Conservation Trust</a> — ~350 redundant CofE churches in permanent care.</li>
-      <li><a href="https://www.churchinwales.org.uk/">Church in Wales</a> — the redundant churches list, including St Tyfrydog's.</li>
-      <li><a href="https://buildingsatrisk.org.uk/">Buildings at Risk Register for Scotland</a> — the Scottish equivalent, run by the Scottish Civic Trust.</li>
-      <li><a href="https://datamap.gov.wales/">DataMapWales / Cadw</a> — Welsh historic assets.</li>
-      <li><a href="https://www.planning.data.gov.uk/">Planning Data API</a> — England-wide listed buildings and heritage layers joined on UPRN.</li>
+      <li><a href="https://historicengland.org.uk/advice/heritage-at-risk/">Historic England's Heritage at Risk Register</a> — the statutory at-risk register for England (969 places of worship in the 2024 release).</li>
+      <li><a href="https://friendsoffriendlesschurches.org.uk/">Friends of Friendless Churches</a> — 72 redundant churches in England and Wales held in long-term conservation care.</li>
+      <li><a href="https://www.visitchurches.org.uk/">Churches Conservation Trust</a> — 356 redundant Church of England churches in permanent care.</li>
+      <li><a href="https://britishlistedbuildings.co.uk/">British Listed Buildings</a> — public mirror of the National Heritage List for England, used to attach the full carved-plate listing description to each at-risk record.</li>
+      <li><a href="https://commons.wikimedia.org/">Wikimedia Commons</a> — CC-licensed photographs of churches without a charity-owned image (956 records).</li>
+      <li><a href="https://postcodes.io/">postcodes.io</a> — geography enrichment: LSOA, parish, ward, council, constituency, rural-urban classification, travel-to-work area for every record.</li>
+      <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> — basemap tiles, styled toward parchment.</li>
+      <li><a href="https://www.nationalchurchestrust.org/">National Churches Trust</a> reporting and survey work — context for the editorial argument.</li>
     </ul>
+    <p class="small-note"><em>Coverage gaps to be honest about:</em> Heritage at Risk is England-only, so the at-risk colour misses Welsh and Scottish buildings until <a href="https://datamap.gov.wales/">DataMapWales / Cadw</a> and the <a href="https://buildingsatrisk.org.uk/">Buildings at Risk Register for Scotland</a> are added. CofE buildings still in active use (the largest single category of UK churches) aren't here at all — the register is about the closing, the closed and the saved.</p>
+
+    <h3>How the data is built</h3>
+    <p>A suite of Python scripts in <a href="https://github.com/peter-guillam123/abandoned-churches/tree/main/build">the project's <code>build/</code> directory</a> pulls each source into a normalised record, joins the geography and photos, and writes a single <code>data/buildings.json</code> the frontend reads. A GitHub Action runs the pipeline nightly. Source code, including every step of the ingest, is <a href="https://github.com/peter-guillam123/abandoned-churches">on GitHub</a> under MIT.</p>
+    <p>Every record carries a <em>provenance</em> string at the bottom of its sidebar — the honest record of where its information came from and how far we'd stand behind it. Status classifications follow a single rule: condition data drives the colour, the custodian decides whether it reads as <em>at risk</em> or <em>preserved</em>. We err toward conservatism — a church the National Heritage List rates "Fair" or worse with no funded plan stays in <em>at risk</em>.</p>
 
     <h3 id="contribute">How to contribute</h3>
     <p>Every building page has an <em>Add to the record</em> button. It sends your note to an editorial queue — nothing is published automatically. We are particularly interested in:</p>
     <ul class="plain">
-      <li>Photographs of churches from your area, especially ones that aren't widely documented.</li>
+      <li>Photographs of churches from your area, especially ones that aren't well-documented online.</li>
       <li>Memories of services, weddings, funerals, harvest festivals — the ordinary life of a building.</li>
-      <li>Corrections. If a building on the register has changed status, or is already in a better state than we describe, tell us.</li>
+      <li>Corrections. If a record has the wrong status, the wrong denomination, the wrong photograph, or a description that's out of date, tell us.</li>
       <li>Tip-offs. A closed church you're worried about. A chapel that was quietly demolished. A rescue we haven't heard of.</li>
     </ul>
 
-    <h3>Editorial notes on the prototype</h3>
-    <p>This version is a seed. Six buildings, hand-researched from public sources and the Guardian's reporting. As the series grows and the data pipelines connect — to the Heritage at Risk API, to the National Churches Trust's Church Heritage Record, to the conservation charities — the register will widen and the per-building detail will deepen. Until then, anywhere a field reads <em>provenance</em>, that's the honest record of where the information came from and how far we would stand behind it.</p>
-    <p>The basemap is OpenStreetMap, styled down toward the newsprint palette. Coordinates for each building are to village or street level; the map marker is not a surveyor's pin.</p>
+    <h3>Editorial notes</h3>
+    <p>This is journalism, not a definitive register. Where two sources disagreed about a building's status, condition or denomination, we kept the more conservative classification. Where Wikidata or a Wikipedia link was available we surfaced it on the building page; that doesn't mean every Wikipedia article matches the building it's linked to perfectly. Every record links back to its primary source so you can take the chain of evidence further.</p>
+    <p>The basemap is OpenStreetMap; coordinates are to street or village level. The map marker is a sign-pointing pin, not a surveyor's stake.</p>
   </section>
 
   <footer class="foot">
     A companion to The Guardian's reporting, not an official Guardian product. Basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.
   </footer>
+
+  <script>
+    // Keep the masthead stat counter and updated date in sync with the
+    // live register without a full ES module set-up.
+    fetch('./data/buildings.json').then(r => r.json()).then(d => {
+      const big = document.querySelector('.masthead .stat .big');
+      if (big && d.buildings) big.textContent = d.buildings.length.toLocaleString();
+      const sub = document.getElementById('stat-sub');
+      if (sub && d.meta?.updated) sub.textContent = `register · updated ${d.meta.updated}`;
+    }).catch(() => {});
+  </script>
 
 </body>
 </html>

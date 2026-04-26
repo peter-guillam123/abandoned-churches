@@ -24,7 +24,7 @@
     </p>
     <div class="stat">
       <span class="big" id="stat-big">—</span>
-      buildings in the register<span class="stat-sub" id="stat-sub">prototype · updated —</span>
+      buildings in the register<span class="stat-sub" id="stat-sub">register · updated —</span>
     </div>
   </header>
 
@@ -54,24 +54,31 @@
         </button>
       </form>
 
-      <div class="filter-block">
-        <p class="label">Filter by status</p>
-        <ul class="chip-list" id="status-legend">
-          <li data-status="at-risk"><span class="dot" style="background: var(--status-at-risk)"></span> At risk <span class="count" data-count="at-risk">0</span></li>
-          <li data-status="rescued"><span class="dot" style="background: var(--status-rescued)"></span> Rescued <span class="count" data-count="rescued">0</span></li>
-          <li data-status="preserved"><span class="dot" style="background: var(--status-preserved)"></span> Preserved <span class="count" data-count="preserved">0</span></li>
-          <li data-status="repurposed"><span class="dot" style="background: var(--status-repurposed)"></span> Repurposed <span class="count" data-count="repurposed">0</span></li>
-          <li data-status="closed"><span class="dot" style="background: var(--status-closed)"></span> Closed, unresolved <span class="count" data-count="closed">0</span></li>
-          <li data-status="demolished"><span class="dot" style="background: var(--status-demolished)"></span> Lost <span class="count" data-count="demolished">0</span></li>
-        </ul>
-      </div>
+      <details class="filter-drawer" open>
+        <summary>
+          <span class="filter-summary-label">Filters</span>
+          <span class="filter-summary-hint">tap a chip to narrow · tap again to clear</span>
+        </summary>
 
-      <div class="filter-block">
-        <p class="label">Filter by denomination</p>
-        <ul class="chip-list chip-list--denom" id="denom-chips" role="listbox" aria-label="Denomination filter"></ul>
-      </div>
+        <div class="filter-block">
+          <p class="label">By status</p>
+          <ul class="chip-list" id="status-legend">
+            <li data-status="at-risk"><span class="dot" style="background: var(--status-at-risk)"></span> At risk <span class="count" data-count="at-risk">0</span></li>
+            <li data-status="rescued"><span class="dot" style="background: var(--status-rescued)"></span> Rescued <span class="count" data-count="rescued">0</span></li>
+            <li data-status="preserved"><span class="dot" style="background: var(--status-preserved)"></span> Preserved <span class="count" data-count="preserved">0</span></li>
+            <li data-status="repurposed"><span class="dot" style="background: var(--status-repurposed)"></span> Repurposed <span class="count" data-count="repurposed">0</span></li>
+            <li data-status="closed"><span class="dot" style="background: var(--status-closed)"></span> Closed, unresolved <span class="count" data-count="closed">0</span></li>
+            <li data-status="demolished"><span class="dot" style="background: var(--status-demolished)"></span> Lost <span class="count" data-count="demolished">0</span></li>
+          </ul>
+        </div>
 
-      <p class="tips">Tap a chip to filter — tap again to clear. Click any dot on the map to read its story.</p>
+        <div class="filter-block">
+          <p class="label">By denomination</p>
+          <ul class="chip-list chip-list--denom" id="denom-chips" role="listbox" aria-label="Denomination filter"></ul>
+        </div>
+      </details>
+
+      <p class="tips">Click any dot on the map to read its story.</p>
     </aside>
 
     <!-- MIDDLE: map -->
@@ -112,7 +119,7 @@
       </div>
       <p class="hint">
         <strong>The status colours indicate what is happening to each building, not how old or how grand it is.</strong>
-        A rescued building in Anglesey sits alongside a repurposed chapel in Spitalfields alongside a medieval church in Essex that would not exist today without intervention. <em>Editorial seed — not a complete register.</em>
+        Madder reds mark the at-risk; verdigris greens mark the rescued and the long-preserved; stones mark the closed and the lost. Every cluster bubble takes the dominant colour of the buildings inside it.
       </p>
     </section>
 
@@ -156,11 +163,11 @@
   </div>
 
   <footer class="foot">
-    Prototype — seed data drawn from <a href="https://friendsoffriendlesschurches.org.uk/">Friends of Friendless Churches</a>, the <a href="https://www.visitchurches.org.uk/">Churches Conservation Trust</a>, the <a href="https://historicengland.org.uk/advice/heritage-at-risk/">Historic England Heritage at Risk register</a> and <a href="https://www.nationalchurchestrust.org/">National Churches Trust</a> reporting. Basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. A companion to The Guardian's reporting, not an official Guardian product.
+    Register built from <a href="https://historicengland.org.uk/advice/heritage-at-risk/">Historic England's Heritage at Risk Register</a>, the <a href="https://friendsoffriendlesschurches.org.uk/">Friends of Friendless Churches</a> gazetteer, the <a href="https://www.visitchurches.org.uk/">Churches Conservation Trust</a>, listing descriptions via <a href="https://britishlistedbuildings.co.uk/">British Listed Buildings</a>, photography from <a href="https://commons.wikimedia.org/">Wikimedia Commons</a> and the conservation charities, and geography from <a href="https://postcodes.io/">postcodes.io</a>. Basemap © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. A companion to The Guardian's reporting, not an official Guardian product.
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous" defer></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" defer></script>
-  <script type="module" src="./src/main.js"></script>
+  <script type="module" src="./src/main.js?v=20260426d"></script>
 </body>
 </html>

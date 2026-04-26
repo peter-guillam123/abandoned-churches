@@ -381,6 +381,23 @@ function closeSubmitModal() {
   el.submitModal.classList.remove('is-open');
 }
 
+// On mobile the filter drawer should start collapsed so the map sits
+// near the top of the column. On desktop it stays open. We watch a
+// matchMedia listener so a screen-rotation or window-resize doesn't
+// strand the user with the drawer in the wrong default state.
+// On mobile the filter drawer should start collapsed so the map sits
+// near the top of the column. The HTML always carries `open` so
+// desktop is correct without JS; we strip it once at boot when the
+// viewport is narrow.
+function wireFilterDrawer() {
+  const drawer = document.querySelector('.filter-drawer');
+  window.__drawerWired = true;
+  if (!drawer) return;
+  if (window.matchMedia('(max-width: 960px)').matches) {
+    drawer.removeAttribute('open');
+  }
+}
+
 function wireSubmit() {
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.open-submit');
@@ -416,7 +433,7 @@ async function boot() {
   const { buildings, meta } = await loadBuildings();
   state.buildings = buildings;
   if (meta?.updated) {
-    el.statSub.textContent = `prototype · updated ${meta.updated}`;
+    el.statSub.textContent = `register · updated ${meta.updated}`;
     if (el.headMeta) el.headMeta.textContent = `Register · updated ${meta.updated}`;
   }
   refreshLegendCounts();
@@ -438,6 +455,7 @@ async function boot() {
   rerender();
   wireStatusChips();
   wireSubmit();
+  wireFilterDrawer();
 
   el.q.addEventListener('input', onSearchInput);
   el.form.addEventListener('submit', (e) => {
